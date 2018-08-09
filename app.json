@@ -1,0 +1,12 @@
+{
+  "pages":[
+    "pages/punch/index",
+    "pages/punch/punchDetails/index"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#00cc9b",
+    "navigationBarTitleText": "7天打卡",
+    "navigationBarTextStyle":"#ffffff"
+  }
+}
