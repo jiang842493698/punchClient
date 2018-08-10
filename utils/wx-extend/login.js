@@ -7,7 +7,7 @@ const defaultOptions = {
   method: 'GET',
   success: noop,
   fail: noop,
-  loginUrl: config.baseUrl + '/api/wechatAuth',
+  loginUrl: config.baseUrl + '/api/auth/wechat',
 }
 
 /**
