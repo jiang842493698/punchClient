@@ -10,15 +10,13 @@
             </view>
             <view class="punch_title_space"></view>
             <view class="punch_title_content">
-                <view>已完成1次打卡</view>
                 <view wx:if="{{punch.isPunching}}">
-                  <view style="margin-top: 20rpx;">打卡押金：5元</view>
-                  <view>打卡返还：2元</view>
+                  <view style="margin-top: 20rpx;">打卡押金：{{7-punchCount}}元</view>
+                  <view>打卡返还：{{punchCount}}元</view>
                 </view>
                 <view wx:else>
                   <view>打卡返还：0元</view>
                 </view>
-                
             </view>
         </view>
         <view class="mine_punch_title">
@@ -28,16 +26,16 @@
             <view class="mine_punch_content_info">
                 <view class="mine_punch_content_title">每天6:30起床</view>
                 <view class="mine_punch_content_top">打卡任务：每天早上6:30——7:00内打卡有效</view>
-                <view class="mine_punch_content_date">打卡周期：{{punch.startDate}}——{{punch.endDate}}</view>
+                <view class="mine_punch_content_date">打卡周期：{{startDate}}——{{endDate}}</view>
             </view>
-            <!-- <view class="punch_people_number">
-                
-            </view> -->
+            
             <view class="punch_people" wx:if="{{!punch.isPunching}}">
                 已有200人参与
             </view>
             <view wx:else>
-              <view class="punch_people_number hook_image" >
+              <view class="punch_people_number" wx:if="{{!punchInfo.status}}">
+              </view>
+               <view class="punch_people_number hook_image" wx:else>
                   <image class="hook" src="/images/hook.png"></image>
               </view>
             </view>
@@ -53,19 +51,31 @@
             </view>
         </view>
         <view class="operating" wx:else>
-            <view class="theme">
-                <view>更多打卡主题正在开发中</view>
-                <view>...</view>
-            </view>
-            <view class="operating_punch" bindtap="onPunch">
+          <view class="theme">
+              <view>更多打卡主题正在开发中</view>
+              <view>...</view>
+          </view>
+          <view wx:if="{{isPunch}}">
+            <form report-submit="true" bindsubmit="onPunch" data-id='{{punchInfo._id}}'>
+              <button class="operating_punch"  formType="submit">
                 点击打卡
+              </button>
+            </form>
+            
+          </view>
+          <view wx:else>
+            <view wx:if="{{isReservation}}">
+              <form  report-submit="true" bindsubmit="reservation" data-id='{{punchInfo.punch}}'>
+                <button class="operating_punch reservation" formType="submit" >
+                  预约明天提醒
+                </button>
+              </form>
             </view>
-            <view class="operating_punch wait">
+            <view class="operating_punch wait" wx:else >
                 等待打卡
             </view>
-            <view class="operating_punch reservation" bindtap="operatingPunch">
-                预约明天提醒
-            </view>
+          </view>
+            
         </view>
 
     </view>
@@ -113,7 +123,11 @@
                 <view class="prompt">
                     承担风险 坚持完成
                 </view>
-                <view class="confirm" catchtap="confirm">确认参加</view>
+                <form report-submit="true" bindsubmit="confirm">
+                    <button class="confirm" disabled="{{!punchSwitch}}" formType="submit" >确认参加</button>
+                    <!-- <button class="confirm" catchtap="{{punchSwitch?'confirm':''}}">确认参加</button> -->
+                </form>
+                
             </view>
         </view>
         <view class="give_up" catchtap="operatingPunch" >

@@ -3,7 +3,7 @@ const config = require('../../config/index');
 
 var getMyPunch = function (callback) {
   requestUtil.request({
-    url: config.baseUrl + '/api/punch/getMyPunch',
+    url: config.baseUrl + '/api/punches/getMyPunch',
     auth: true,
     
     method: 'get',
@@ -21,7 +21,7 @@ var getMyPunch = function (callback) {
 
 var createPunch = function (callback) {
   requestUtil.request({
-    url: config.baseUrl + '/api/punch/createPunch',
+    url: config.baseUrl + '/api/punches/createPunch',
     auth: true,
 
     method: 'post',
@@ -56,4 +56,42 @@ var updatePunchInfo = function(data,callback){
   });
 }
 
-module.exports = { getMyPunch, createPunch, updatePunchInfo }
+var updateReservationPunchInfo = function (data, callback){
+  requestUtil.request({
+    url: config.baseUrl + '/api/punchInfo/updateReservationPunchInfo',
+    auth: true,
+
+    method: 'put',
+    header: {
+      'content-type': 'application/json'
+    },
+    data: data,
+    success: function (response) {
+      callback(null, response.data);
+    },
+    fail: function (error) {
+      callback(error);
+    }
+  });
+}
+
+var updatePunchStart = function (callback) {
+  requestUtil.request({
+    url: config.baseUrl + '/api/punchInfo/updatePunchStart',
+    auth: true,
+    method: 'put',
+    header: {
+      'content-type': 'application/json'
+    },
+    success: function (response) {
+      callback(null, response.data);
+    },
+    fail: function (error) {
+      callback(error);
+    }
+  });
+}
+
+
+
+module.exports = { getMyPunch, createPunch, updatePunchInfo, updateReservationPunchInfo, updatePunchStart }

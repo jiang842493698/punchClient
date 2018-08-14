@@ -3,7 +3,7 @@ const config = require('../../config/index');
 
 function updatePlayer(userInfo, callback) {
   requestUtil.request({
-    url: config.baseUrl + '/api/players/updateMyInfo',
+    url: config.baseUrl + '/api/gamblers/updateMyInfo',
     auth: true,
     data: {
       userInfo: JSON.stringify(userInfo)
@@ -23,7 +23,7 @@ function updatePlayer(userInfo, callback) {
 //查询活动信息
 function getMyBenefits(data, callback){
   requestUtil.request({
-    url: config.baseUrl + '/api/players/getMyBenefits',
+    url: config.baseUrl + '/api/gamblers/getMyBenefits',
     auth: true,
     method: 'GET',
     data: data,

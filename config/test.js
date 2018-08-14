@@ -1,3 +1,3 @@
 module.exports = {
-  baseUrl: 'https://bgt.wofangyou.cn'
+  baseUrl: 'https://pcht.wofangyou.cn'
 };  
