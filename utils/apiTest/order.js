@@ -20,5 +20,26 @@ var createOrder = function (data,callback) {
   });
 }
 
+/**退款 */
+var refundOrder = function (data,callback) {
+  requestUtil.request({
+    url: config.baseUrl + '/api/orders/'+data.orderId+'/refund',
+    auth: true,
+    method: 'post',
+    data: {
+      refundFee: data.refundFee
+    },
+    header: {
+      'content-type': 'application/json'
+    },
+    success: function (response) {
+      callback(null, response.data);
+    },
+    fail: function (error) {
+      callback(error);
+    }
+  });
+}
 
-module.exports = {createOrder}
+
+module.exports = { createOrder, refundOrder }

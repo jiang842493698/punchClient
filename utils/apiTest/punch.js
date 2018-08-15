@@ -19,11 +19,13 @@ var getMyPunch = function (callback) {
   });
 }
 
-var createPunch = function (callback) {
+var createPunch = function (orderId,callback) {
   requestUtil.request({
     url: config.baseUrl + '/api/punches/createPunch',
     auth: true,
-
+    data: {
+      orderId: orderId,
+    },
     method: 'post',
     header: {
       'content-type': 'application/json'
@@ -39,7 +41,7 @@ var createPunch = function (callback) {
 
 var updatePunchInfo = function(data,callback){
   requestUtil.request({
-    url: config.baseUrl + '/api/punchInfo/updatePunchInfo',
+    url: config.baseUrl + '/api/punchRecords/'+data.punchRecordsId+'/punch',
     auth: true,
 
     method: 'put',
@@ -58,14 +60,16 @@ var updatePunchInfo = function(data,callback){
 
 var updateReservationPunchInfo = function (data, callback){
   requestUtil.request({
-    url: config.baseUrl + '/api/punchInfo/updateReservationPunchInfo',
+    url: config.baseUrl + '/api/punchRecords/'+data.punch+'/reserve',
     auth: true,
-
     method: 'put',
+    
     header: {
       'content-type': 'application/json'
     },
-    data: data,
+    data: {
+      formId: data.formId
+    },
     success: function (response) {
       callback(null, response.data);
     },
@@ -92,6 +96,18 @@ var updatePunchStart = function (callback) {
   });
 }
 
+var getPunchCount = function(callback){
+  requestUtil.request({
+    url: config.baseUrl + '/api/punches/getPunchCount',
+    method: 'GET',
+    
+    success: function (response) {
+      callback(null, response.data);
+    },
+    fail: function (error) {
+      callback(error);
+    }
+  })
+}
 
-
-module.exports = { getMyPunch, createPunch, updatePunchInfo, updateReservationPunchInfo, updatePunchStart }
+module.exports = { getMyPunch, createPunch, updatePunchInfo, updateReservationPunchInfo, updatePunchStart, getPunchCount }
