@@ -1,7 +1,7 @@
 // pages/punch/index.js
 const app = getApp();
-const punch = require('../../utils/apiTest/punch');
-const order = require('../../utils/apiTest/order');
+const punch = require('../../utils/api/punch');
+const order = require('../../utils/api/order');
 const gamblerUtil = require('../../utils/api/gambler');
 const sessionUtil = require('../../utils/wx-extend/session');
 const utils = require('../../utils/util')
@@ -373,7 +373,6 @@ Page({
               if (err) {
                 console.error('error: ', err);
               } else {
-               
                 let dataJson = {
                   punch: data.punch,
                   punchRecords: data.punchRecords
@@ -381,7 +380,6 @@ Page({
                 self.isDisplay(dataJson)
               }
             });
-
           },
           fail: function(){
             wx.showModal({
