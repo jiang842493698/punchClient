@@ -63,12 +63,12 @@ var updateReservationPunchInfo = function (data, callback){
     url: config.baseUrl + '/api/punchRecords/'+data.punch+'/reserve',
     auth: true,
     method: 'put',
-    
     header: {
       'content-type': 'application/json'
     },
     data: {
-      formId: data.formId
+      formId: data.formId,
+      count: data.count,
     },
     success: function (response) {
       callback(null, response.data);
@@ -81,7 +81,7 @@ var updateReservationPunchInfo = function (data, callback){
 
 var updatePunchStart = function (callback) {
   requestUtil.request({
-    url: config.baseUrl + '/api/punchInfo/updatePunchStart',
+    url: config.baseUrl + '/api/punches/updatePunchStart',
     auth: true,
     method: 'put',
     header: {

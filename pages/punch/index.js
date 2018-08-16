@@ -27,7 +27,10 @@ Page({
     hasPunched : false,
     punchSwitch : true,
     punchRecords : {},
-    punchCount: 0 
+    punchCount: 0 ,
+    punchCounts:0,
+    punchSuccessPop: false ,
+    punchEvent: false,
   },
 
   /**
@@ -41,9 +44,9 @@ Page({
   },
   timeOut(){
     let self = this
-    // setInterval(function(){
-    //   self.interval()
-    // },1000)
+    setInterval(function(){
+      self.interval()
+    },1000)
   },
   punchCount(){
     let _this = this
@@ -72,12 +75,10 @@ Page({
 
   interval(){
     var self = this;
-    let currentDate = new Date().getTime()
-    
+    let currentDate = moment().add(0,"day").valueOf()
     let minPunchDate = new Date(punch.startDate).getTime()
     let maxPunchDate = new Date(punch.endDate).getTime()
     let punchRecords = self.data.punchRecords
-    
     let dataIndex = Math.floor((currentDate - minPunchDate)/(24*60*60*1000))
     if(dataIndex >= 0){
       let punchStartDate = moment(punchRecords[dataIndex].punchDate).startOf("day").add(6,"hour").add(30,"Minute").valueOf()
@@ -104,17 +105,15 @@ Page({
     }
   },
 
-  
-
-
   //显示加载数据
   isDisplay(data){
     var self = this;
-    let punchCount = data.punchRecords.filter(e => e.hasPunched == true).length//返回金额
+    console.info(data)
+    let punchCounts = data.punchRecords.filter(e => e.hasPunched == true).length//返回金额
     let punch = data.punch
     if(data.punchRecords.length > 0){
       let punchRecords = data.punchRecords.sort((a,b) => a.punchDate > b.punchDate)
-      let currentDate = new Date().getTime()  //当前时间的时间戳
+      let currentDate = moment().add(0,"day").valueOf()  //当前时间的时间戳
       let minPunchDate = new Date(punch.startDate).getTime()
       let maxPunchDate = new Date(punch.endDate).getTime()
       let dataIndex = Math.floor((currentDate - minPunchDate)/(24*60*60*1000))
@@ -125,7 +124,7 @@ Page({
         let punchEndReserved = moment(punchRecords[dataIndex].punchDate).endOf("day").valueOf()
         self.setData({
           punchSwitch: true,
-          punchCount,
+          punchCounts,
           punch_pop: false,
           dataIndex : dataIndex,
           loadingComplete: true,
@@ -143,7 +142,7 @@ Page({
       }else{
         self.setData({
           punchSwitch: true,
-          punchCount,
+          punchCounts,
           punch_pop: false,
           dataIndex : dataIndex,
           loadingComplete: true,
@@ -169,126 +168,6 @@ Page({
     }
   },
     
-  //判断是否显示
-  // isDisplay(data){
- 
-  //   var self = this;
-  //   let isPunch = false
-  //   let isReservations = false
-    
-  //   let punchCount = data.punchRecords.filter(e => e.hasPunched == true).length//返回的金额
-  //   let currentTime = moment().format("YYYY-MM-DD HH:mm:ss")//当前的时间
-  //   let tomorrowDay = moment().startOf("day").add(1,"day").format("YYYY-MM-DD HH:mm:ss") //明天的时间
-  //   let punchStartDate = moment(data.punch.startDate).format("YYYY-MM-DD HH:mm:ss")//打卡活动开始时间
-  //   let punchEndDate = moment(data.punch.endDate).format("YYYY-MM-DD HH:mm:ss")//打卡活动结束时间
-    
-  //   //先判断当前时间是否在开始时间段到结束时间段中
-  //   if (moment(currentTime).isBetween(punchStartDate, punchEndDate)){
-  //     //每天的活动时间
-  //     //显示打卡是否可打卡的状态
-  //     //早上6.30以前显示等待打卡 点击预约明天打卡后会显示等待打卡
-  //     //6.30-7.00显示点击打卡 
-  //     //7.30-12.00显示预约明天打卡 如果时间小于data.punch.startDate也是显示预约明天打卡 
-  //     let punchStartTime = moment().startOf("day").add(9, "hour").add(20, "Minute").format("YYYY-MM-DD HH:mm:ss")//打卡的开始时间
-  //     let punchEndTime = moment().startOf("day").add(11, "hour").add(0, "Minute").format("YYYY-MM-DD HH:mm:ss")//打卡的结束时间
-  //     let currentEndDate = moment().endOf("day").format("YYYY-MM-DD HH:mm:ss")
-  //     let currentDate = moment().startOf("day").format("YYYY-MM-DD HH:mm:ss")
-  //   
-  //     let todayData = data.punchRecords.filter(e =>  
-  //       moment(e.punchDate).startOf("day").format("YYYY-MM-DD HH:mm:ss") == currentDate
-  //     )[0] //找到今天的数据
-
-  //    
-  //     let clickPunchStatus = moment(currentTime).isBetween(punchStartTime, punchEndTime)//点击打卡状态判断时间是否在6.30到7.00之间
-  //     let clicPunchedStatus = moment(currentTime).isBetween(punchEndTime, currentEndDate)//点击预约状态
-  //    
-  //     if(!todayData){
-  //     
-  //       let tomorrowDate = data.punchRecords.filter(e =>
-  //         moment(e.punchDate).format("YYYY-MM-DD HH:mm:ss") == tomorrowDay
-  //       )[0]
-  //       if (!tomorrowDate.hasReserved){
-  //         isReservations = true
-  //       }else{
-  //         isReservations = false
-  //       }
-  //     }else{
-  //       if(clickPunchStatus){
-  //         if (todayData.hasPunched ) {//判断当前时间的状态,如果是已打卡则不显示打卡信息
-  //           isPunch = false
-  //           //判断明天的预约数据是否预约
-            
-            
-  //         }else{
-  //           isPunch = true    
-  //         }
-  //       }else if(clicPunchedStatus){
-  //         let tomorrowDate = data.punchRecords.filter(e =>
-  //           moment(e.punchDate).format("YYYY-MM-DD HH:mm:ss") == tomorrowDay
-  //         )[0]
-  //         if (!tomorrowDate.hasReserved){
-  //           isReservations = true
-  //         }else{
-  //           isReservations = false
-  //         }
-  //       }
-  //     }
-      
-     
-      
-  //     wx.hideLoading();
-  //     self.setData({
-  //       punchSwitch: true,
-  //       punchCount,
-  //       punch_pop: false,
-  //       isPunch: isPunch,
-  //       hasPunched: isReservations,
-  //       loadingComplete: true,
-  //       punch: data.punch,
-  //       startDate: moment(data.punch.startDate).format("YYYY-MM-DD"),
-  //       endDate: moment(data.punch.endDate).format("YYYY-MM-DD"),
-  //       punchRecords: todayData,
-  //       punchRecordsArray: data.punchRecords,
-  //     }) 
-
-  //   } else if (moment(currentTime).isBefore(punchStartDate)){
-      
-  //     let tomorrowDate = data.punchRecords.filter(e =>
-  //       moment(e.punchDate).format("YYYY-MM-DD HH:mm:ss") == tomorrowDay
-  //     )[0]
-  //     if (!tomorrowDate.hasPunched) {
-  //       isReservations = true
-  //     }else{
-  //       //如果小于开始时间的话则只能预约
-  //       isReservations = false
-  //     }
-  //     wx.hideLoading();
-  //     self.setData({
-  //       punchSwitch: true,
-  //       punchCount,
-  //       punch_pop: false,
-  //       isPunch: isPunch,
-  //       hasPunched: isReservations,
-  //       loadingComplete: true,
-  //       punch: data.punch, 
-  //       startDate: moment(data.punch.startDate).format("YYYY-MM-DD"),
-  //       endDate: moment(data.punch.endDate).format("YYYY-MM-DD"),
-  //       punchRecords: tomorrowDate,
-  //       punchRecordsArray: data.punchRecords,
-  //     }) 
-  //   }else{
-  //     //如果大于结束时间的话就修改punch状态将抽奖状态改为false
-  //     punch.updatePunchStart(function (err, data){
-  //       if (err) {
-  //         console.error('error: ', err);
-  //       } else {
-  //         self.loadData()
-  //       }
-  //     })
-
-  //   }
-  // },
-  
   toogleBargainModal() {
     this.setData({
       showBargainModal: !this.data.showBargainModal
@@ -338,6 +217,7 @@ Page({
       });
     }
   },
+
   operatingPunch(){
     this.setData({
       punch_pop : !this.data.punch_pop
@@ -352,11 +232,11 @@ Page({
     })
     
     //先创建订单
-    var data = {
+    
+    order.createOrder({
       body: '7天打卡-确认加入',
-      totalFee: 1
-    }
-    order.createOrder(data,function(err,order){
+      totalFee: 700
+    },function(err,order){
       if(err){
         console.error('error: ',err)
       }else{
@@ -382,13 +262,21 @@ Page({
             });
           },
           fail: function(){
-            wx.showModal({
-              title: "支付失败",
-              content: "支付失败请联系管理员"
+            // wx.showModal({
+            //   title: "支付失败",
+            //   content: "支付失败请联系管理员"
+            // })
+            self.setData({
+              punchSwitch :true,
             })
           },
           complete: function(e){
-
+            console.log(e)
+            if(e.errMsg=="requestPayment:fail cancel"){
+              self.setData({
+                punchSwitch :true,
+              })
+            }
           }
         })
 
@@ -398,16 +286,19 @@ Page({
 
   //点击打卡
   onPunch(e){
-    
+   
     let self = this
+    //获取今天的Id
     let data = {
       punchRecordsId: e.currentTarget.dataset.id
     } 
-    
+    //获取明天的Id
     let punchRecordsData ={
-      punch : e.currentTarget.dataset.nextid
+      punch : e.currentTarget.dataset.nextid,
+      formId: e.detail.formId,
+      count: self.data.punchCounts
     }
-   
+    //修改今天的打卡信息
     punch.updatePunchInfo(data,function (err, data) {
       if (err) {
         console.error('error: ', err);
@@ -417,57 +308,62 @@ Page({
         let punchRecords = self.data.punchRecords
         punchRecords = punchRecords.filter(e => e._id != todayPunchRecord._id)
         punchRecords.push(todayPunchRecord)
-        punch.updateReservationPunchInfo(punchRecordsData, function (err, datas) {
-          if (err) {
-            console.error('error: ', err);
-          } else {
-           
-            var data = {
-              refundFee: 1,
-              orderId : self.data.orderId
-            }
-            order.refundOrder(data,function(err,data){
-              
-            })
-            punchRecords = punchRecords.filter(e => e._id != datas.punchRecord._id)
-            punchRecords.push(datas.punchRecord)
+        // wx.showToast({
+        //   title : "您已成功打卡"
+        // })
+        //发送退款请求
+        order.refundOrder({
+          refundFee: 100,
+          orderId : punchs.order
+        },function(err,data){
+          //修改明天的预约数据
+          if(self.data.dataIndex>=6){
             let dataJson = {
               punch: punchs,
               punchRecords: punchRecords
             }
+            self.setData({
+              punchSuccessPop: true,
+              punchEvent : true,
+            })
             self.isDisplay(dataJson)
+          }else{
+            self.setData({
+              punchSuccessPop: true,
+              punchEvent : false,
+            })
+            punch.updateReservationPunchInfo(punchRecordsData, function (err, datas) {
+              if (err) {
+                console.error('error: ', err);
+              } else {
+                console.info(datas)
+                punchRecords = punchRecords.filter(e => e._id != datas.punchRecord._id)
+                punchRecords.push(datas.punchRecord)
+                let dataJson = {
+                  punch: punchs,
+                  punchRecords: punchRecords
+                }
+                self.isDisplay(dataJson)
+              }
+            });
           }
-        });
+         
 
-
-        // let punch = self.data.punch
-        // 
-
-        // punchRecordsArray = punchRecordsArray.filter(e => e._id != data.updatePunchInfo._id)
-        // punchRecordsArray = punchRecordsArray.filter(e => e._id != data.punchRecords._id)
-        // let punchRecordsList = punchRecordsArray
-        // punchRecordsList.push(data.punchRecords)
-        // punchRecordsList.push(data.updatePunchInfo)
-        
-        // let dataJson={
-        //   punch: punch,
-        //   punchRecords: punchRecordsList
-        // }
-        // self.isDisplay(dataJson)
+        })
       }
     });
   },
+
   //预约明天打卡
   reservation(e){
-   
+    
     let self = this
-    // let currentTime = moment().startOf("day").add(1, "day").toDate()
     let data={
-      // punchDate :currentTime,
       punch: e.currentTarget.dataset.id,
-      formId: e.detail.formId
+      formId: e.detail.formId,
+      count:self.data.punchCounts
     }
-
+    console.log(self.data.punchCounts)
     punch.updateReservationPunchInfo(data, function (err, datas) {
       if (err) {
         console.error('error: ', err);
@@ -480,6 +376,9 @@ Page({
           punch: punch,
           punchRecords: punchRecordsList
         }
+        wx.showToast({
+          title: "您已成功预约"
+        })
         self.isDisplay(dataJson)
       }
     });
@@ -515,6 +414,7 @@ Page({
       })
     })
   },
+
   tuikuan(){
     let _this = this
     var data = {
@@ -523,5 +423,46 @@ Page({
     }
     order.refundOrder(data,function(err,data){
     })
-  }
+  },
+
+  deleteData(){
+    let _this = this
+    punch.updatePunchStart(function(err,data){
+      _this.loadData()
+    })
+  },
+
+  hasPunchSuccessPop(){
+    let self = this
+    self.setData({
+      punchSuccessPop: !self.data.punchSuccessPop,
+    })
+  },
+
+  onShareAppMessage(options) {    // 分享设置
+    console.log(options)
+    if(options.from == 'button'){
+      if(options.target.id == "toDay"){
+        return {
+          title: '今天我又打卡成功了，来看看我在坚持什么吧~',
+          path: `/pages/punch/index`,
+          imageUrl: '/images/share_oneday.png', 
+        }
+      }else if(options.target.id == "sevenDay"){
+        return {
+          title: '我已坚持打卡7天，你猜我又养成了什么好习惯？',
+          path: `/pages/punch/index`,
+          imageUrl: '/images/share_sevenday.png', 
+        }
+      }else{
+        return {
+          title: '今天我又打卡成功了，来看看我在坚持什么吧~',
+          path: `/pages/punch/index`,
+          imageUrl: '/images/share_oneday.png', 
+        }
+      }
+      
+    }
+  },
+  
 })
