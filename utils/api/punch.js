@@ -24,7 +24,7 @@ var createPunch = function (orderId,callback) {
     url: config.baseUrl + '/api/punches/createPunch',
     auth: true,
     data: {
-      orderId: orderId,
+      // orderId: orderId,
     },
     method: 'post',
     header: {

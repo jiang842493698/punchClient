@@ -2,6 +2,7 @@ const requestUtil = require('../wx-extend/request');
 const config = require('../../config/index');
 
 function updatePlayer(userInfo, callback) {
+  console.info("userInfo", userInfo)
   requestUtil.request({
     url: config.baseUrl + '/api/gamblers/updateMyInfo',
     auth: true,
@@ -20,20 +21,6 @@ function updatePlayer(userInfo, callback) {
     }
   });
 }
-//查询活动信息
-function getMyBenefits(data, callback){
-  requestUtil.request({
-    url: config.baseUrl + '/api/gamblers/getMyBenefits',
-    auth: true,
-    method: 'GET',
-    data: data,
-    success: function (response) {
-      callback(null, response.data);
-    },
-    fail: function (error) {
-      callback(error);
-    }
-  });
-}
 
-module.exports = { updatePlayer, getMyBenefits };
+
+module.exports = { updatePlayer };
