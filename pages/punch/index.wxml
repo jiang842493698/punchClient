@@ -60,7 +60,7 @@
           </view>
           <!-- <view>{{ punchStartDate  }}</view> -->
           <view wx:if="{{ dataIndex >= 0 && punchRecords[dataIndex].hasPunched == false && currentDate > punchStartDate && currentDate < punchEndDate }}">
-            <form report-submit="true" bindsubmit="onPunch" data-id='{{punchRecords[dataIndex]._id}}' data-nextId='{{dataIndex < 6?punchRecords[dataIndex + 1]._id:""}}'>
+            <form report-submit="true" bindsubmit="{{onPunch?'onPunch':''}}" data-id='{{punchRecords[dataIndex]._id}}' data-nextId='{{dataIndex < 6?punchRecords[dataIndex + 1]._id:""}}'>
               <button class="operating_punch"  formType="submit">
                 点击打卡
               </button>

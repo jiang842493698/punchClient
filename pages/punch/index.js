@@ -18,7 +18,7 @@ Page({
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
-
+    onPunch: true,
     loadingComplete : false,
     isParticipatePunch : false,
     startAt:"",
@@ -141,12 +141,14 @@ Page({
           punchEndDate: punchEndDate,
           punchRecords: punchRecords,
           punchEndReserved:punchEndReserved,
+          onPunch : true,
           startDate: moment(data.punch.startDate).format("YYYY-MM-DD"),
           endDate: moment(data.punch.endDate).format("YYYY-MM-DD"),
         })
       }else{
         self.setData({
           punchSwitch: true,
+          onPunch : true,
           punchCounts,
           punch_pop: false,
           dataIndex : dataIndex,
@@ -164,6 +166,7 @@ Page({
       self.setData({
         isPunch: false,
         hasPunched: false,
+        onPunch : true,
         loadingComplete: true,
         punch: data.punch,
         punchRecords: data.punchRecords,
@@ -240,23 +243,23 @@ Page({
     
     //先创建订单
     
-    // order.createOrder({
-    //   body: '7天打卡-确认加入',
-    //   totalFee: 700
-    // },function(err,order){
-    //   if(err){
-    //     console.error('error: ',err)
-    //   }else{
-    //     console.info(order)
-    //     wx.requestPayment({
-    //       timeStamp: order.timeStamp,
-    //       nonceStr: order.nonceStr,
-    //       package: order.package,
-    //       signType: order.signType,
-    //       paySign: order.paySign,
-    //       success: function(orderPayData){
-              // let orderId = order.orderId
-    let orderId = "0"
+    order.createOrder({
+      body: '7天打卡-确认加入',
+      totalFee: 700
+    },function(err,order){
+      if(err){
+        console.error('error: ',err)
+      }else{
+        console.info(order)
+        wx.requestPayment({
+          timeStamp: order.timeStamp,
+          nonceStr: order.nonceStr,
+          package: order.package,
+          signType: order.signType,
+          paySign: order.paySign,
+          success: function(orderPayData){
+              let orderId = order.orderId
+    // let orderId = "0"
             punch.createPunch(orderId,function (err, data) {
               if (err) {
                 console.error('error: ', err);
@@ -268,34 +271,37 @@ Page({
                 self.isDisplay(dataJson)
               }
             });
-    //       },
-    //       fail: function(){
-    //         // wx.showModal({
-    //         //   title: "支付失败",
-    //         //   content: "支付失败请联系管理员"
-    //         // })
-    //         self.setData({
-    //           punchSwitch :true,
-    //         })
-    //       },
-    //       complete: function(e){
-    //         console.log(e)
-    //         if(e.errMsg=="requestPayment:fail cancel"){
-    //           self.setData({
-    //             punchSwitch :true,
-    //           })
-    //         }
-    //       }
-    //     })
+          },
+          fail: function(){
+            // wx.showModal({
+            //   title: "支付失败",
+            //   content: "支付失败请联系管理员"
+            // })
+            self.setData({
+              punchSwitch :true,
+            })
+          },
+          complete: function(e){
+            console.log(e)
+            if(e.errMsg=="requestPayment:fail cancel"){
+              self.setData({
+                punchSwitch :true,
+              })
+            }
+          }
+        })
 
-    //   }
-    // })
+      }
+    })
   },
 
   //点击打卡
   onPunch(e){
-   
+    
     let self = this
+    self.setData({
+      onPunch: false,
+    })
     //获取今天的Id
     let data = {
       punchRecordsId: e.currentTarget.dataset.id
@@ -320,6 +326,7 @@ Page({
         //   title : "您已成功打卡"
         // })
         //发送退款请求
+
         order.refundOrder({
           refundFee: 100,
           orderId : punchs.order
@@ -340,6 +347,7 @@ Page({
               punchSuccessPop: true,
               punchEvent : false,
             })
+            
             punch.updateReservationPunchInfo(punchRecordsData, function (err, datas) {
               if (err) {
                 console.error('error: ', err);
