@@ -1,0 +1,207 @@
+<view class="container" wx:if="{{ loadingComplete }}">
+    <view class="punch">
+        <view class="punch_title">
+            <view class="punch_title_image">
+                <open-data class="user_avatar_url" type="userAvatarUrl"></open-data>
+            </view>
+            <view class="punch_title_name">
+                <open-data type="userNickName" ></open-data>
+            </view>
+            <view class="punch_title_space"></view>
+            <view class="punch_title_content">
+                <view wx:if="{{data.punch.isPunching}}">
+                  <view >打卡押金：{{ 7-data.punchRecord.length }}元</view>
+                  <view>打卡返还：{{ data.punchRecord.length }}元</view>
+                </view>
+                <view wx:else>
+                    <view >打卡押金：0元</view>
+                    <view>打卡返还：0元</view>
+                </view>
+            </view>
+        </view>
+        <view class="mine_punch_title">
+            我的打卡
+        </view>
+        <view class="mine_punch_content">
+          <view class='mine_punch_content_infos'>
+            <view class="mine_punch_content_info">
+              <view class="mine_punch_content_title">每天6:30起床</view>
+              <view class="mine_punch_content_top">打卡任务：每天早上6:30 — 7:00内打卡有效</view>
+              <view class="mine_punch_content_date">打卡周期：{{ data.punch.startDate }} — {{ data.punch.endDate }}</view>
+            </view>
+            
+            <view class="punch_people" wx:if="{{ !data.punch.isPunching }}">
+                已有{{ punchCount }}人参与
+            </view>
+            <view class='punch_people' wx:else>
+              正在参加
+            </view>
+          </view>
+          <view class='punch_status'>
+            <view class='every_day' wx:for="{{ 7 }}">
+              <view class='punch_status_number'>第{{ item + 1 }}天</view>
+              <view class="punch_people_number hook_image" >
+                <view class='punch_people_numbe_status'>-</view>
+              </view>
+              <view class='punch_status_status'>未开始</view>
+            </view>
+          </view>
+           
+            <!-- <view wx:else>
+                <view class="punch_people_number hook_image" wx:if="{{ dataIndex >= 0 && punchRecords[dataIndex].hasPunched == true }}">
+                    
+                    <image class="hook" src="/images/hook.png"></image>
+                </view>
+              <view class="punch_people_number" wx:else>
+              </view>
+               
+            </view> -->
+            
+        </view>
+       
+        <view class="operating" wx:if="{{ !data.punch.isPunching }}">
+            <view class="theme">
+                <view>更多打卡主题正在开发中</view>
+                <view>...</view>
+            </view>
+            <view class="operating_punch" bindtap="operatingPunch">
+                参加打卡
+            </view>
+        </view>
+        <view class="operating" wx:else>
+          <view class="theme">
+              <view>更多打卡主题正在开发中</view>
+              <view>...</view>
+          </view>
+          <view wx:if="{{ dataIndex >= 0 && punchRecords[dataIndex].hasPunched == false && currentDate > punchStartDate && currentDate < punchEndDate }}">
+            <form report-submit="true" bindsubmit="{{onPunch?'onPunch':''}}" data-id='{{punchRecords[dataIndex]._id}}' data-nextId='{{dataIndex < 6?punchRecords[dataIndex + 1]._id:""}}'>
+              <button class="operating_punch"  formType="submit">
+                点击打卡
+              </button>
+            </form>
+          </view>
+          <view wx:else>
+            <view wx:if="{{ (dataIndex < 0 && punchRecords[0].hasReserved == false) || (dataIndex >= 0 && dataIndex < 6 && punchRecords[dataIndex + 1].hasReserved == false) && (currentDate >= punchEndDate && dataIndex < 6 && currentDate <= punchEndReserved) }}">
+              <form  report-submit="true" bindsubmit="reservation" data-id='{{punchRecords[dataIndex + 1]._id}}'>
+                <button class="operating_punch reservation" formType="submit" >
+                  预约明天提醒
+                </button>
+              </form>
+              
+            </view>
+            <view class="operating_punch wait" wx:else >
+                等待打卡
+            </view>
+          </view>
+            
+        </view>
+
+    </view>
+    <view class="pop_ups"   wx:if="{{ punch_pop }}">
+        <view class="participation_instructions">
+            <view class="pop_ups_title">
+                如何参加打卡
+            </view>
+            <view class="pop_ups_content">
+                <view class="pop_ups_content_list">
+                    <view class="pop_ups_contents">
+                        <view class="pop_ups_image">
+                            <image class="image_content" src="/images/icon_7days.png">
+
+                            </image>
+                        </view>
+                        <view class="punch_Introduction">
+                            <view>打卡持续7天</view>
+                            <view>需支付押金7元</view>
+                        </view>
+                    </view>
+                    <view class="pop_ups_contents">
+                        <view class="pop_ups_image">
+                            <image class="image_content"  src="/images/icon_1dollar.png">
+
+                            </image>
+                        </view>
+                        <view class="punch_Introduction">
+                            <view>成功打卡1元</view>
+                            <view>返还押金1元</view>
+                        </view>
+                    </view>
+                    <view class="pop_ups_contents">
+                        <view class="pop_ups_image">
+                            <image class="image_content" src="/images/icon_keep.png">
+
+                            </image>
+                        </view>
+                        <view class="punch_Introduction" >
+                            <view>缺席打卡1天</view>
+                            <view>扣除押金1元</view>
+                        </view>
+                    </view>
+                </view>
+                <view class="prompt">
+                    承担风险 坚持完成
+                </view>
+                <form report-submit="true" bindsubmit="confirm">
+                    <button class="confirm" disabled="{{!punchSwitch}}" formType="submit" >确认参加</button>
+                    
+                </form>
+                
+            </view>
+        </view>
+        <view class="give_up" catchtap="operatingPunch" >
+            我要放弃
+        </view>
+    </view>
+    
+    <button bindtap="deleteData">删除</button>
+    <view class="pop_ups"  wx:if="{{ punchSuccessPop }}" >
+        <view>
+            <view wx:if="{{ !punchEvent }}">
+                <view>
+                    <button class="adhere_to_punch by_one_day"  open-type="share" id="toDay" >
+                        <view class="adhere_to_punch_image">
+                            <image class="adhere_punch_image" src="/images/one_success.png"></image>
+                        </view>
+                        <view class="punch_title_text">
+                            赞！坚持打卡{{ punchCounts }}天
+                        </view>
+                        <view class="adhere_to_punch_text" >[ 每天6:30起床 ]</view>
+                            <button class="share share_one" id="toDay" open-type="share">
+                                分享我的小坚持
+                            </button>
+                    </button>
+                </view>
+                <view class="cloes" catchtap="hasPunchSuccessPop">关闭</view>
+            </view>
+            <view wx:else>
+                <view>
+                    <button class="adhere_to_punch by_seven_day" open-type="share"  id="sevenDay">
+                        <view class="adhere_to_punch_image">
+                            <image class="adhere_punch_image" src="/images/seven_success.png"></image>
+                        </view>
+                        <view class="punch_title_text">
+                            大赞！打卡成功啦
+                        </view>
+                        <view class="adhere_to_punch_text" >[ 每天6:30起床 ]</view>
+                        <button class="share share_seven" id="sevenDay" open-type="share" >
+                            分享我的小成功
+                        </button>
+                    </button>
+
+                </view>
+                
+                <view class="cloes" catchtap="hasPunchSuccessPop">关闭</view>
+            </view>
+
+        </view>
+        
+        
+
+    </view>
+
+<button bindgetuserinfo="getUserInfo" class="get-user-info-button" openType="getUserInfo" wx:if="{{ !hasUserInfo && canIUse }}">
+</button>
+    
+</view>
+
+<loading wx:else></loading>

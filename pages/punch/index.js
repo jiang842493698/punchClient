@@ -38,7 +38,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    console.info(moment().startOf("day").add(6, "hour").add(30, "Minute").format("YYYY-MM-DD HH:mm:ss"))
+    
     this.checkLoginStatus();
     this.loadData();
     this.punchCount();
@@ -243,27 +243,28 @@ Page({
     
     //先创建订单
     
-    order.createOrder({
-      body: '7天打卡-确认加入',
-      totalFee: 700
-    },function(err,order){
-      if(err){
-        console.error('error: ',err)
-      }else{
-        console.info(order)
-        wx.requestPayment({
-          timeStamp: order.timeStamp,
-          nonceStr: order.nonceStr,
-          package: order.package,
-          signType: order.signType,
-          paySign: order.paySign,
-          success: function(orderPayData){
-              let orderId = order.orderId
-    // let orderId = "0"
+    // order.createOrder({
+    //   body: '7天打卡-确认加入',
+    //   totalFee: 700
+    // },function(err,order){
+    //   if(err){
+    //     console.error('error: ',err)
+    //   }else{
+    //     console.info(order)
+    //     wx.requestPayment({
+    //       timeStamp: order.timeStamp,
+    //       nonceStr: order.nonceStr,
+    //       package: order.package,
+    //       signType: order.signType,
+    //       paySign: order.paySign,
+    //       success: function(orderPayData){
+    //           let orderId = order.orderId
+    let orderId = "0"
             punch.createPunch(orderId,function (err, data) {
               if (err) {
                 console.error('error: ', err);
               } else {
+                console.log(data)
                 let dataJson = {
                   punch: data.punch,
                   punchRecords: data.punchRecords
@@ -271,28 +272,28 @@ Page({
                 self.isDisplay(dataJson)
               }
             });
-          },
-          fail: function(){
-            // wx.showModal({
-            //   title: "支付失败",
-            //   content: "支付失败请联系管理员"
-            // })
-            self.setData({
-              punchSwitch :true,
-            })
-          },
-          complete: function(e){
-            console.log(e)
-            if(e.errMsg=="requestPayment:fail cancel"){
-              self.setData({
-                punchSwitch :true,
-              })
-            }
-          }
-        })
+    //       },
+    //       fail: function(){
+    //         // wx.showModal({
+    //         //   title: "支付失败",
+    //         //   content: "支付失败请联系管理员"
+    //         // })
+    //         self.setData({
+    //           punchSwitch :true,
+    //         })
+    //       },
+    //       complete: function(e){
+    //         console.log(e)
+    //         if(e.errMsg=="requestPayment:fail cancel"){
+    //           self.setData({
+    //             punchSwitch :true,
+    //           })
+    //         }
+    //       }
+    //     })
 
-      }
-    })
+    //   }
+    // })
   },
 
   //点击打卡
