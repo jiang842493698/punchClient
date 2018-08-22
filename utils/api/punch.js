@@ -24,7 +24,7 @@ var createPunch = function (orderId,callback) {
     url: config.baseUrl + '/api/punches/createPunch',
     auth: true,
     data: {
-      // orderId: orderId,
+      orderId: orderId,
     },
     method: 'post',
     header: {
@@ -110,4 +110,23 @@ var getPunchCount = function(callback){
   })
 }
 
-module.exports = { getMyPunch, createPunch, updatePunchInfo, updateReservationPunchInfo, updatePunchStart, getPunchCount }
+var createPunchRecord = function(data, callback){
+  requestUtil.request({
+    url: config.baseUrl + '/api/punchRecords/savePunch',
+    auth: true,
+    method: 'post',
+    data: {
+      dateIndex: data.dateIndex+1,
+      punch: data.punch
+    },
+    
+    success: function (response) {
+      callback(null, response.data);
+    },
+    fail: function (error) {
+      callback(error);
+    }
+  })
+}
+
+module.exports = { getMyPunch, createPunch, updatePunchInfo, updateReservationPunchInfo, updatePunchStart, getPunchCount, createPunchRecord }

@@ -56,11 +56,11 @@ page{
 }
 .mine_punch_content{
     width: 700rpx;
-    height: 400rpx;
+    height: 165rpx;
     background-color: #fff;
     border-radius: 30rpx;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
 
@@ -87,14 +87,13 @@ page{
 .punch_people_number{
     width: 54rpx;
     height: 54rpx;
-    border : 7rpx solid #cccccc;
+    border : 7rpx solid #ff9933;
     border-radius: 50%; 
-    /* margin-right: 45rpx; */
+    margin-right: 45rpx;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin: 20rpx 0rpx 20rpx 0rpx;
 }
 .operating{
     position: absolute;
@@ -133,7 +132,7 @@ page{
     background-color: #bfbfbf;
 }
 .hook_image{
-    border: 7rpx solid #cccccc
+    border: 7rpx solid #00cc99
 }
 .hook{
     width: 40rpx;
@@ -300,38 +299,6 @@ page{
     line-height: 100rpx;
     color: #e4e4e4;
 }
+.sharess{
 
-.mine_punch_content_infos{
-    width: 700rpx;
-    height: 165rpx;
-    background-color: #fff;
-    border-radius: 30rpx;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
-.punch_status{
-  width: 610rpx;
-  margin-left: 10rpx;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-.punch_status_number{
-  font-size: 20rpx;
-  color:#666666;
-  text-align: center;
-}
-.punch_status_status{
-  font-size: 20rpx;
-  color:#666666;
-  margin-bottom: 60rpx;
-}
-.every_day{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-content: center;
 }

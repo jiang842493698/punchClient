@@ -2,5 +2,5 @@
   "usingComponents": {
     "loading": "../../components/loading/index"
   },
-  "enablePullDownRefresh": false
+  "enablePullDownRefresh":false
 }
