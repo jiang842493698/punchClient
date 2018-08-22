@@ -67,19 +67,7 @@
                 
             </view>
           </view>
-           
-            <!-- <view wx:else>
-                <view class="punch_people_number hook_image" wx:if="{{ dataIndex >= 0 && punchRecords[dataIndex].hasPunched == true }}">
-                    
-                    <image class="hook" src="/images/hook.png"></image>
-                </view>
-              <view class="punch_people_number" wx:else>
-              </view>
-               
-            </view> -->
-            
         </view>
-       
         <view class="operating" wx:if="{{ !data.punch.isPunching }}">
             <view class="theme">
                 <view>更多打卡主题正在开发中</view>
@@ -108,15 +96,12 @@
                   预约明天提醒
                 </button>
               </form>
-              
             </view>
             <view class="operating_punch wait" wx:else >
                 等待打卡
             </view>
           </view>
-            
         </view>
-
     </view>
     <view class="pop_ups"   wx:if="{{ punch_pop }}">
         <view class="participation_instructions">
@@ -171,8 +156,6 @@
             我要放弃
         </view>
     </view>
-    
-    
     <view class="pop_ups"  wx:if="{{ punchSuccessPop }}" >
         <view>
             <view wx:if="{{ !punchEvent }}">
@@ -206,21 +189,12 @@
                             分享我的小成功
                         </button>
                     </button>
-
                 </view>
-                
                 <view class="cloes" catchtap="hasPunchSuccessPop">关闭</view>
             </view>
-
         </view>
-        
-        
-
     </view>
-
 <button bindgetuserinfo="getUserInfo" class="get-user-info-button" openType="getUserInfo" wx:if="{{ !hasUserInfo && canIUse }}">
 </button>
-    
 </view>
-
 <loading wx:else></loading>
