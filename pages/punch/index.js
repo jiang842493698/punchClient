@@ -27,6 +27,7 @@ Page({
     onPunch: true,
     punchSuccessPop: false,
     punchEvent: false,
+    onShowPunchList: true
   },
 
   /**
@@ -49,6 +50,10 @@ Page({
   /**参与打卡 */
   confirm(){
     var self = this;
+    wx.showLoading({
+      title: "加载中...",
+      mask: true,
+    });
     self.setData({
       punchSwitch: false
     })
@@ -68,9 +73,7 @@ Page({
           paySign: order.paySign,
           success: function(orderPayData){
               let orderId = order.orderId
-
-
-
+              
               // let orderId = "0"
               punch.createPunch(orderId, function (err, data) {
                 if (err) {
@@ -82,6 +85,7 @@ Page({
                     punchSwitch: true,
                     punch_pop: !self.data.punch_pop
                   })
+                  wx.hideLoading();
                 }
               });
 
@@ -125,6 +129,10 @@ Page({
 
   //点击打卡
   onPunch(e){
+    wx.showLoading({
+      title: '加载中...',
+      mask: true,
+    });
     var self = this;
     console.info(e)
     self.setData({
@@ -135,22 +143,22 @@ Page({
       punch: e.currentTarget.dataset.id,
       formId: e.detail.formId,
     }
+    let punchs = self.data.data.punch
     //打卡
     punch.createPunchRecord(data, function(err, date){
       if(err){
         console.error(err)
       }else{
-
+        console.info("date",date)
         //退款
         order.refundOrder({
-          refundFee: 1,
+          refundFee: 100,
           orderId : punchs.order
         },function(err,orders){
           if(err){
             console.error(err)
           }else{
-
-            //预约明天的数据
+            wx.hideLoading();
             if(self.data.dateIndex==6){
               self.setData({
                 punchSuccessPop: !self.data.punchSuccessPop,
@@ -162,10 +170,12 @@ Page({
                 punchEvent: false,
               })
             }
+            //预约明天的数据
             reserve.saveReserve(data, function (err, datas) {
               if (err) {
                 console.error('error: ', err);
               } else {
+                console.info(datas)
                 self.loadData()
               }
             });
@@ -201,7 +211,7 @@ Page({
         //当天打卡的开始时间
         let punchStartDate = moment(data.dateJson.currentTime).startOf("day").add(6,"hour").add(30,"Minute").valueOf()
         //当天打卡的结束时间
-        let punchEndDate = moment(data.dateJson.currentTime).startOf("day").add(18,"hour").valueOf()
+        let punchEndDate = moment(data.dateJson.currentTime).startOf("day").add(7,"hour").add(0,"Minute").valueOf()
         
         //当天的结束时间
         let endDate = moment(data.dateJson.currentTime).endOf("day").valueOf()
@@ -216,17 +226,25 @@ Page({
         //判断punchRecord中有没有
         let hasPunch = data.punchRecord.filter(e => e.punchDay == dateIndex + 1 )
         let hasReserve = data.reserve.filter(e => e.reserveDay == dateIndex + 1 )
-        
+        console.info("dateIndex",dateIndex)
         let punchList = []
-        
         for(let i = 0; i <= dateIndex; i++){
           punchList[i] = false
         }
         for(let p of  data.punchRecord){
-          console.log(p)
           punchList[p.punchDay-1] = true          
         }
         console.log(punchList)
+        if(currentTime > punchStartDate){
+          self.setData({
+            onShowPunchList: false,
+          })
+        }else{
+          self.setData({
+            punchList : punchList.splice(punchList.length-1,1),
+            onShowPunchList: true,
+          })
+        }
         self.timeOut(currentTime,punchStartDate,punchEndDate,endDate)
         self.setData({
           dateIndex: dateIndex,
@@ -247,6 +265,18 @@ Page({
     });
   },
 
+  delete(){
+    let _this = this
+    punch.updatePunchStart(function(err,data){
+      if(err){
+
+      }else{
+        console.info(data)
+        _this.loadData()
+      }
+    })
+  },
+
   timeOut(currentTime, punchStartDate, punchEndDate, endDate){
     var self = this;
    
@@ -258,25 +288,20 @@ Page({
           punchStartDate
         })
       }, punchStartDate - currentTime)
-      
     }
-    
     if (currentTime < punchEndDate) {
       self.timer = setTimeout(function () {
         currentTime = punchEndDate
-        let data = self.data.data
-        data.dateJson = dateJson
         self.setData({
           currentTime,
-          punchEndDate
+          punchEndDate,
+          onShowPunchList: false,
         })
       }, punchEndDate - currentTime)
     }
     if (currentTime < endDate) {
       self.timer = setTimeout(function () {
-        dateJson.currentTime = dateJson.endDate
-        let data = self.data.data
-        data.dateJson = dateJson
+        currentTime = endDate
         self.setData({
           currentTime,
           endDate
@@ -292,6 +317,10 @@ Page({
    */
   reservation(e){
     let self = this
+    wx.showLoading({
+      title: "加载中",
+      mask: true,
+    });
     
     let data = {
       punch: e.currentTarget.dataset.id,
@@ -306,6 +335,10 @@ Page({
       } else {
         
         self.loadData()
+        wx.hideLoading();
+        wx.showToast({
+          title: "您已成功预约"
+        })
         
       }
     });

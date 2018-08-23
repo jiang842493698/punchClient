@@ -37,35 +37,65 @@
               正在参加
             </view>
           </view>
-          <view class='punch_status'>
-            <view class='every_day' wx:for="{{ punchList }}" wx:key="{{ item }}">
-                <view>
-                    <view class='punch_status_number'>第{{ index + 1 }}天</view>
-                    <view wx:if="{{ item == true }}">
-                        <image class='punch_status_number_image' src='/images/daka_ok.png'></image>
-                        <view class='punch_status_status'>已开始</view>
+          <view class='punch_status' wx:if="{{ data.punch.isPunching }}">
+            <view class="punch_status_list" wx:if="{{!onShowPunchList}}">
+                <view class='every_day' wx:for="{{ punchList }}" wx:key="{{ item }}">
+                    <view>
+                        <view class='punch_status_number'>第{{ index + 1 }}天</view>
+                        <view wx:if="{{ item == true }}">
+                            <image class='punch_status_number_image' src='/images/daka_ok.png'></image>
+                            <view class='punch_status_status'>已开始</view>
+                        </view>
+                        <view wx:else>
+                            <image class='punch_status_number_image' src='/images/daka_no.png'></image>
+                            <view class='punch_status_status'>未打卡</view>
+                        </view>
                     </view>
-                    <view wx:else>
-                        <image class='punch_status_number_image' src='/images/daka_no.png'></image>
-                        <view class='punch_status_status'>未打卡</view>
+                </view>
+                <view class='every_day' wx:for="{{ 7 - punchList.length }}" wx:key="{{ item }}">
+                    <view>
+                        <view class='punch_status_number'>第{{ punchList.length + index + 1 }}天</view>
+                        <view >
+                            <image class='punch_status_number_image' src='/images/daka_stay.png'></image>
+                        </view>
+                        <view class='punch_status_status'>未开始</view>
+                    </view>
+                </view>
+            </view>
+            <view wx:else class="punch_status_list">
+                <view class='every_day' wx:for="{{ punchList }}" wx:key="{{ item }}">
+                    <view>
+                        <view class='punch_status_number'>第{{ index + 1 }}天</view>
+                        <view wx:if="{{ item == true }}">
+                            <image class='punch_status_number_image' src='/images/daka_ok.png'></image>
+                            <view class='punch_status_status'>已开始</view>
+                        </view>
+                        <view wx:else>
+                            <image class='punch_status_number_image' src='/images/daka_no.png'></image>
+                            <view class='punch_status_status'>未打卡</view>
+                        </view>
+                        
+    
                     </view>
                     
-
                 </view>
-                
-            </view>
-            <view class='every_day' wx:for="{{ 7 - punchList.length }}" wx:key="{{ item }}">
-                <view>
-                    <view class='punch_status_number'>第{{ punchList.length+ index + 1 }}天</view>
-
-                    <view >
-                        <image class='punch_status_number_image' src='/images/daka_stay.png'></image>
+                <view class='every_day' wx:for="{{ 7 - punchList.length }}" wx:key="{{ item }}">
+                    <view>
+                        <view class='punch_status_number'>第{{ punchList.length+ index + 1 }}天</view>
+    
+                        <view >
+                            <image class='punch_status_number_image' src='/images/daka_stay.png'></image>
+                        </view>
+                        <view class='punch_status_status'>未开始</view>
+    
                     </view>
-                    <view class='punch_status_status'>未开始</view>
-
+                    
                 </view>
-                
+
+
             </view>
+           
+            
           </view>
         </view>
         <view class="operating" wx:if="{{ !data.punch.isPunching }}">
@@ -103,6 +133,7 @@
           </view>
         </view>
     </view>
+    
     <view class="pop_ups"   wx:if="{{ punch_pop }}">
         <view class="participation_instructions">
             <view class="pop_ups_title">
@@ -194,6 +225,7 @@
             </view>
         </view>
     </view>
+    <!-- <button bindtap="delete">删除</button> -->
 <button bindgetuserinfo="getUserInfo" class="get-user-info-button" openType="getUserInfo" wx:if="{{ !hasUserInfo && canIUse }}">
 </button>
 </view>

@@ -56,7 +56,6 @@ page{
 }
 .mine_punch_content{
     width: 700rpx;
-    height: 400rpx;
     background-color: #fff;
     border-radius: 30rpx;
     display: flex;
@@ -341,4 +340,12 @@ page{
   height: 64rpx;
   margin-top: 20rpx;
   margin-bottom: 20rpx;
+}
+.punch_status_list{
+    width: 100%;
+    
+    display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: center;
 }
