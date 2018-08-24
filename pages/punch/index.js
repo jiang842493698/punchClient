@@ -40,12 +40,12 @@ Page({
     this.punchCount();
   },
 
-  deleteData() {
-    let _this = this
-    punch.updatePunchStart(function (err, data) {
-      _this.loadData()
-    })
-  },
+  // deleteData() {
+  //   let _this = this
+  //   punch.updatePunchStart(function (err, data) {
+  //     _this.loadData()
+  //   })
+  // },
 
   /**参与打卡 */
   confirm(){
@@ -64,7 +64,7 @@ Page({
       if(err){
         console.error('error: ',err)
       }else{
-        console.info(order)
+        wx.hideLoading();
         wx.requestPayment({
           timeStamp: order.timeStamp,
           nonceStr: order.nonceStr,
@@ -73,31 +73,24 @@ Page({
           paySign: order.paySign,
           success: function(orderPayData){
               let orderId = order.orderId
-              
               // let orderId = "0"
               punch.createPunch(orderId, function (err, data) {
                 if (err) {
                   console.error('error: ', err);
                 } else {
                   self.loadData()
-                  
                   self.setData({
                     punchSwitch: true,
                     punch_pop: !self.data.punch_pop
                   })
-                  wx.hideLoading();
+                  
                 }
               });
-
-
            },
           fail: function(){
-            // wx.showModal({
-            //   title: "支付失败",
-            //   content: "支付失败请联系管理员"
-            // })
             self.setData({
               punchSwitch :true,
+              punch_pop: !self.data.punch_pop
             })
           },
           complete: function(e){
@@ -105,6 +98,7 @@ Page({
             if(e.errMsg=="requestPayment:fail cancel"){
               self.setData({
                 punchSwitch :true,
+                punch_pop: !self.data.punch_pop
               })
             }
           }
@@ -149,8 +143,18 @@ Page({
       if(err){
         console.error(err)
       }else{
-        console.info("date",date)
-        //退款
+        if(date.err){
+          wx.showToast({
+            title: "超过打卡时间",
+            icon: 'none',
+            duration: 1500,
+            mask: false,
+          });
+          self.setData({
+            onPunch: !self.data.onPunch
+          })
+        }else{
+           //退款
         order.refundOrder({
           refundFee: 100,
           orderId : punchs.order
@@ -159,10 +163,16 @@ Page({
             console.error(err)
           }else{
             wx.hideLoading();
-            if(self.data.dateIndex==6){
-              self.setData({
-                punchSuccessPop: !self.data.punchSuccessPop,
-                punchEvent: true,
+            //判断当天是否是最后一天打卡
+            if(data.dateIndex==6){
+              punch.updatePunchStart(function(err,data){
+                if(err){
+                }else{
+                  self.setData({
+                    punchSuccessPop: !self.data.punchSuccessPop,
+                    punchEvent: true,
+                  })
+                }
               })
             }else{
               self.setData({
@@ -179,13 +189,13 @@ Page({
                 self.loadData()
               }
             });
-
           }
         })
+        }
+       
 
       }
     })
-
   },
 
   hasPunchSuccessPop(){
@@ -204,8 +214,7 @@ Page({
       if (err) {
         console.error('error: ', err);
       } else {
-        console.info("时间是：",utils.formatTime(new Date()))
-        console.info(data)
+        
         //当前时间
         let currentTime = moment(data.dateJson.currentTime).valueOf()
         //当天打卡的开始时间
@@ -219,48 +228,57 @@ Page({
         let activeStartTime = moment(data.punch.startDate).startOf("day").valueOf()
         //当前是哪一天
         let dateIndex = Math.floor((currentTime - activeStartTime)/(24*60*60*1000))
-        //活动开始时间的格式化
-        data.punch.startDate = moment(data.punch.startDate).format("YYYY-MM-DD")
-        //活动结束时间的格式化
-        data.punch.endDate = moment(data.punch.endDate).format("YYYY-MM-DD")
-        //判断punchRecord中有没有
-        let hasPunch = data.punchRecord.filter(e => e.punchDay == dateIndex + 1 )
-        let hasReserve = data.reserve.filter(e => e.reserveDay == dateIndex + 1 )
-        console.info("dateIndex",dateIndex)
-        let punchList = []
-        for(let i = 0; i <= dateIndex; i++){
-          punchList[i] = false
-        }
-        for(let p of  data.punchRecord){
-          punchList[p.punchDay-1] = true          
-        }
-        console.log(punchList)
-        if(currentTime > punchStartDate){
-          self.setData({
-            onShowPunchList: false,
+        if(dateIndex > 6 && currentTime > punchEndDate){
+          punch.updatePunchStart(function(err,data){
+            if(err){
+            }else{
+              self.loadData()
+            }
           })
         }else{
+          //活动开始时间的格式化
+          data.punch.startDate = moment(data.punch.startDate).format("YYYY-MM-DD")
+          //活动结束时间的格式化
+          data.punch.endDate = moment(data.punch.endDate).format("YYYY-MM-DD")
+          //判断punchRecord中有没有
+          let hasPunch = data.punchRecord.filter(e => e.punchDay == dateIndex + 1 )
+          let hasReserve = data.reserve.filter(e => e.reserveDay == dateIndex + 1 )
+          console.info("dateIndex",dateIndex)
+          let punchList = []
+          for(let i = 0; i <= dateIndex; i++){
+            punchList[i] = false
+          }
+          for(let p of  data.punchRecord){
+            punchList[p.punchDay-1] = true          
+          }
+          console.log(punchList)
+          if(currentTime > punchStartDate){
+            self.setData({
+              onShowPunchList: false,
+            })
+          }else{
+            self.setData({
+              punchList : punchList.splice(punchList.length-1,1),
+              onShowPunchList: true,
+            })
+          }
+          self.timeOut(currentTime,punchStartDate,punchEndDate,endDate)
           self.setData({
-            punchList : punchList.splice(punchList.length-1,1),
-            onShowPunchList: true,
+            dateIndex: dateIndex,
+            currentTime,
+            punchStartDate,
+            punchEndDate,
+            endDate,
+            activeStartTime,
+            punchList,
+            data: data,
+            hasPunch,
+            hasReserve,
+            loadingComplete: true,
+            onPunch: true,
           })
         }
-        self.timeOut(currentTime,punchStartDate,punchEndDate,endDate)
-        self.setData({
-          dateIndex: dateIndex,
-          currentTime,
-          punchStartDate,
-          punchEndDate,
-          endDate,
-          activeStartTime,
-          punchList,
-          data: data,
-          hasPunch,
-          hasReserve,
-          loadingComplete: true,
-          onPunch: true,
-        })
-        console.info(self.data)
+        
       }
     });
   },
@@ -269,9 +287,7 @@ Page({
     let _this = this
     punch.updatePunchStart(function(err,data){
       if(err){
-
       }else{
-        console.info(data)
         _this.loadData()
       }
     })
@@ -344,11 +360,25 @@ Page({
     });
   },
 
+  /**
+   * 继续打卡
+   */
+  confirms(){
+    this.setData({
+      punchSuccessPop: !this.data.punchSuccessPop
+    })
+    let _this = this
+    _this.setData({
+      punch_pop: !_this.data.punch_pop
+    })
+  },
 
+  //参加打卡
   operatingPunch() {
     this.setData({
       punch_pop: !this.data.punch_pop
     })
+    
   },
 
   checkLoginStatus() {   // 检查登录状态

@@ -246,6 +246,7 @@ page{
 }
 .by_seven_day{
     background-color: #5BE589;
+    /* height: 800rpx; */
 }
 .adhere_to_punch_image{
     width: 100%;
@@ -348,4 +349,31 @@ page{
   flex-direction: row;
   justify-content: space-between;
   align-content: center;
+}
+.carry_punch{
+    margin-top: -30rpx;
+    height: 200rpx;
+    
+    border-radius: 0rpx 0rpx 30rpx 30rpx;
+    background-color:#5BE589;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.carry{
+    height: 100rpx;
+    width: 400rpx;
+    margin-top: -50rpx;
+    background-color: #339933;
+    border-radius: 30rpx;
+    text-align: center;
+    line-height: 100rpx;
+    color: #fff;
+}
+.punch_status_text{
+   text-align: right;
+}
+.punch_number{
+    color: #00cc99;
 }
