@@ -1,132 +1,23 @@
 const requestUtil = require('../wx-extend/request');
 const config = require('../../config/index');
 
-var getMyPunch = function (callback) {
-  requestUtil.request({
-    url: config.baseUrl + '/api/punches/getMyPunch',
-    auth: true,
-    
-    method: 'get',
-    header: {
-      'content-type': 'application/json'
-    },
-    success: function (response) {
-      callback(null, response.data);
-    },
-    fail: function (error) {
-      callback(error);
-    }
-  });
+/**首页显示是否参与打卡， 打卡记录详情 */
+var loadPunch = function(callback) {
+    let data = [{
+        name: "每天6:30起床",
+        startTime: "6:30",
+        endTime: "7:00",
+        startDate: "2018-08-29",
+        endDate: "2018-08-05",
+        cycle:3,
+        status: 1,
+        details: [{
+            dataIndex:1
+        }],
+    },]
+    callback(null,data)
 }
 
-var createPunch = function (orderId,callback) {
-  requestUtil.request({
-    url: config.baseUrl + '/api/punches/createPunch',
-    auth: true,
-    data: {
-      orderId: orderId,
-    },
-    method: 'post',
-    header: {
-      'content-type': 'application/json'
-    },
-    success: function (response) {
-      callback(null, response.data);
-    },
-    fail: function (error) {
-      callback(error);
-    }
-  });
-}
 
-var updatePunchInfo = function(data,callback){
-  requestUtil.request({
-    url: config.baseUrl + '/api/punchRecords/'+data.punchRecordsId+'/punch',
-    auth: true,
 
-    method: 'put',
-    header: {
-      'content-type': 'application/json'
-    },
-    data: data,
-    success: function (response) {
-      callback(null, response.data);
-    },
-    fail: function (error) {
-      callback(error);
-    }
-  });
-}
-
-var updateReservationPunchInfo = function (data, callback){
-  requestUtil.request({
-    url: config.baseUrl + '/api/punchRecords/'+data.punch+'/reserve',
-    auth: true,
-    method: 'put',
-    header: {
-      'content-type': 'application/json'
-    },
-    data: {
-      formId: data.formId,
-      count: data.count,
-    },
-    success: function (response) {
-      callback(null, response.data);
-    },
-    fail: function (error) {
-      callback(error);
-    }
-  });
-}
-
-var updatePunchStart = function (callback) {
-  requestUtil.request({
-    url: config.baseUrl + '/api/punches/updatePunchStart',
-    auth: true,
-    method: 'put',
-    header: {
-      'content-type': 'application/json'
-    },
-    success: function (response) {
-      callback(null, response.data);
-    },
-    fail: function (error) {
-      callback(error);
-    }
-  });
-}
-
-var getPunchCount = function(callback){
-  requestUtil.request({
-    url: config.baseUrl + '/api/punches/getPunchCount',
-    method: 'GET',
-    
-    success: function (response) {
-      callback(null, response.data);
-    },
-    fail: function (error) {
-      callback(error);
-    }
-  })
-}
-
-var createPunchRecord = function(data, callback){
-  requestUtil.request({
-    url: config.baseUrl + '/api/punchRecords/savePunch',
-    auth: true,
-    method: 'post',
-    data: {
-      dateIndex: data.dateIndex+1,
-      punch: data.punch
-    },
-    
-    success: function (response) {
-      callback(null, response.data);
-    },
-    fail: function (error) {
-      callback(error);
-    }
-  })
-}
-
-module.exports = { getMyPunch, createPunch, updatePunchInfo, updateReservationPunchInfo, updatePunchStart, getPunchCount, createPunchRecord }
+module.exports = { loadPunch, }

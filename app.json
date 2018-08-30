@@ -1,6 +1,7 @@
 {
   "pages":[
-    "pages/punch/index"
+    "pages/punch/index",
+    "pages/punch/punchInfo/index"
   ],
   "window":{
     "backgroundTextStyle":"light",

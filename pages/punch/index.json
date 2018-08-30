@@ -1,6 +1,8 @@
 {
   "usingComponents": {
-    "loading": "../../components/loading/index"
+    "loading": "../../components/loading/index",
+    "accordion": "../../components/accordion/index",
+    "accordion-group": "../../components/accordion-group/index"
   },
   "enablePullDownRefresh": false
 }

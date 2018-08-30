@@ -1,0 +1,6 @@
+.wux-accordion-group {
+  position: relative;
+  border: none;
+  border-bottom-left-radius: 30rpx;
+  border-bottom-right-radius: 30rpx;
+}
