@@ -10,6 +10,8 @@ Page({
    */
   data: {
     startDate: moment().add(1, "day").format("YYYY-MM-DD"),
+    endDate: moment().add(1, "month").format("YYYY-MM-DD"),
+    startDateValue: moment().add(1, "day").format("YYYY-MM-DD"),
     endDate: moment().add(7, "day").format("YYYY-MM-DD"),
     startTime: "00:00",
     endTime: "00:00"
@@ -37,6 +39,7 @@ Page({
     self.setData({
       punchSwitch: false
     })
+    wx.hideLoading();
     if (e.detail.value.title == "") {
       wx.showModal({
         title: "警告",
@@ -49,9 +52,6 @@ Page({
       });
       return
     }
-
-
-
     // order.createOrder({
     //   body: '7天打卡-确认加入',
     //   totalFee: 700
@@ -69,7 +69,6 @@ Page({
 
     //       success: function(orderPayData){
     let orderId = 1
-    wx.hideLoading();
     let dataJson = {
       startDate: e.detail.value.startDate,
       endDate: self.data.endDate,
@@ -121,7 +120,7 @@ Page({
     let startDate = e.detail.value
     let endDate = moment(startDate).add(6, "day").format("YYYY-MM-DD")
     this.setData({
-      startDate,
+      startDateValue: startDate,
       endDate
     })
 

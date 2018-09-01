@@ -1,23 +1,69 @@
 const requestUtil = require('../wx-extend/request');
 const config = require('../../config/index');
 
-/**首页显示是否参与打卡， 打卡记录详情 */
-var loadPunch = function(callback) {
-    let data = [{
-        name: "每天6:30起床",
-        startTime: "6:30",
-        endTime: "7:00",
-        startDate: "2018-08-29",
-        endDate: "2018-08-05",
-        cycle:3,
-        status: 1,
-        details: [{
-            dataIndex:1
-        }],
-    },]
-    callback(null,data)
+/** */
+var savePunch = function(data,callback) {
+    requestUtil.request({
+        url: config.baseUrl + '/api/punchRecords/savePunch',
+        auth: true,
+        method: 'post',
+        data: {
+          dateIndex: data.dateIndex+1,
+          punch: data.punch
+        },
+        success: function (response) {
+          callback(null, response.data);
+        },
+        fail: function (error) {
+          callback(error);
+        }
+    })
+}
+
+/** */
+var updatePunchTime = function(callback) {
+  requestUtil.request({
+      url: config.baseUrl + '/api/punches/updatePunchTime',
+      auth: true,
+      method: 'put',
+      success: function (response) {
+        callback(null, response.data);
+      },
+      fail: function (error) {
+        callback(error);
+      }
+  })
+}
+
+/** */
+var updateActiveAndPunch = function(callback) {
+  requestUtil.request({
+      url: config.baseUrl + '/api/punches/updateActiveAndPunch',
+      auth: true,
+      method: 'put',
+      success: function (response) {
+        callback(null, response.data);
+      },
+      fail: function (error) {
+        callback(error);
+      }
+  })
+}
+
+var getPunch = function(callback){
+  requestUtil.request({
+    url: config.baseUrl + '/api/punches/getPunch',
+    auth: true,
+    method: 'get',
+    success: function (response) {
+      callback(null, response.data);
+    },
+    fail: function (error) {
+      callback(error);
+    }
+})
 }
 
 
 
-module.exports = { loadPunch, }
+module.exports = { savePunch,updatePunchTime,updateActiveAndPunch,getPunch }

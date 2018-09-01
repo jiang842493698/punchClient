@@ -1,0 +1,60 @@
+/* pages/punch/punchInfo/index.wxss */
+.punchInfo{
+    margin-top: 40rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.punch_text{
+    width: 685rpx;
+    height: 145rpx;
+    border-bottom: 1rpx solid #e1e1e1;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+.punch_text_input{
+    width: 685rpx;
+    height: 100rpx;
+    font-size:42rpx;
+}
+.start_time{
+    display: flex;
+    width: 685rpx;
+    flex-direction: row;
+    justify-content: space-between;
+    align-content: center;
+    
+}
+.start_time_text{
+    color: #999999;
+}
+.start_time_text_content{
+    color: #999999;
+}
+.submit_view{
+    width: 100%;
+    position: fixed;
+    bottom: 40rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.give_up{
+    width: 100%;
+    text-align: center;
+    height: 100rpx;
+    line-height: 100rpx;
+    color: #999999;
+    
+}
+.submit{
+    width: 100%;
+    background-color: #1b76ff;
+    height: 100rpx; 
+    color: #ffffff;
+}

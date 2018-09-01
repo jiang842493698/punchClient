@@ -1,0 +1,8 @@
+{
+    "navigationBarBackgroundColor": "#1b76ff",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "修改打卡信息",
+    "usingComponents": {
+        "loading": "../../components/loading/index"
+    }
+  }

@@ -56,9 +56,15 @@ page {
     margin-top: 5rpx;
     font-size: 28rpx;
     height: 80rpx;
-    text-align: center;
-    line-height: 80rpx;
+    /* text-align: center;
+    line-height: 80rpx; */
     color: #b4b4b4;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width:700rpx;
+
 }
 
 .mine_punch_content {
@@ -78,7 +84,6 @@ page {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
 }
 
 .mine_punch_content_title {
@@ -352,13 +357,14 @@ page {
 
 .mine_punch_content_infos {
     width: 700rpx;
-    height: 150rpx;
+    /* height: 150rpx; */
     background-color: #fff;
     border-radius: 30rpx;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    margin-top: 0rpx;
 }
 
 .punch_status {
@@ -456,4 +462,62 @@ page {
 .accordion_class{
     border-bottom-left-radius: 30rpx;
     border-bottom-right-radius: 30rpx;
+}
+.not_add{
+     background-color:#bfbfbf;
+     color:#fff;
+
+}
+.mine_punch_title_content{
+    
+    height: 50rpx;
+}
+.more{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    
+}
+
+.mine_punch_list_kongge{
+    height: 250rpx;
+}
+.mine_punch_title_kong{
+    width: 100rpx;
+    height: 50rpx;
+}
+.moreOperating{
+    position:fixed;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    bottom: 0rpx;
+    width: 700rpx;
+}
+.update{
+    width: 750rpx;
+    height: 100rpx;
+    background-color: #fff;
+    text-align: center;
+    line-height: 100rpx;
+    border-top: 1rpx solid #666;
+    
+}
+.delete{
+    width: 750rpx;
+    height: 100rpx;
+    background-color: #fff;
+    text-align: center;
+    line-height: 100rpx;
+}
+
+.insertOperating{
+    width: 700rpx;
+}
+
+.more_operating{
+    position: fixed;
+    bottom:0rpx; 
 }

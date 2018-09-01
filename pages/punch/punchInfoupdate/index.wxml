@@ -1,0 +1,47 @@
+<view class="container" wx:if="{{ loadingComplete }}">
+        <form class="punchInfo" bindsubmit="formSubmit">
+            <view class="punch">
+                <view class="punch_text">
+                    <input class="punch_text_input" placeholder-style='color:#999999;' type="text" name="title" placeholder="{{ active.name }}" />
+                </view>
+            </view>
+            <view class="punch">
+                <view class="punch_text">
+                   <picker  mode="date"  name="startDate" bindchange="startDate" value="{{ startDate }}" start="{{ startDateValue }}" end="{{ endDate }}">
+                        <view class="start_time">
+                            <view class="start_time_text">开始时间</view>
+                            <view class="start_time_text_content" >{{ startDate }}</view>
+                        </view>
+                   </picker>
+                </view>
+            </view>
+    
+            <view class="punch">
+                <view class="punch_text">
+                    <view class="start_time">
+                        <view class="start_time_text">截止时间（自动7天周期）</view>
+                        <view class="start_time_text_content" name="endDate">{{ endDate }}</view>
+                    </view>
+                </view>
+            </view>
+            <view class="punch">
+                <view class="punch_text">
+                    <picker  mode="time" name="startTime" bindchange="startTime"  value="{{ startTime }}" start="{{ startTime }}">
+                        <view class="start_time" >
+                            <view class="start_time_text">打卡开始时间段(固定半小时)</view>
+                            <view class="start_time_text_content" name="startTime">{{ startTime }}</view>
+                        </view>
+                    </picker>
+                </view>
+            </view>
+            
+            <view class="submit_view">
+                <view class="give_up" bindtap="giveUp">放弃打卡</view>
+                <button formType="submit" class="submit">确定</button>
+            </view>
+            
+        </form>
+        <button bindgetuserinfo="getUserInfo" class="get-user-info-button" openType="getUserInfo" wx:if="{{ !hasUserInfo && canIUse }}">
+        </button>
+    </view>
+    <loading wx:else></loading>

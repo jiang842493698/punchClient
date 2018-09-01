@@ -7,10 +7,10 @@
         </view>
         <view class="punch">
             <view class="punch_text">
-               <picker  mode="date"  name="startDate" bindchange="startDate" value="{{ startDate }}" start="{{ startDate }}">
+               <picker  mode="date"  name="startDate" bindchange="startDate" value="{{ startDate }}" start="{{ startDate }}" end="{{endDate}}">
                     <view class="start_time">
                         <view class="start_time_text">开始时间</view>
-                        <view class="start_time_text_content" >{{ startDate }}</view>
+                        <view class="start_time_text_content" >{{ startDateValue }}</view>
                     </view>
                </picker>
             </view>
