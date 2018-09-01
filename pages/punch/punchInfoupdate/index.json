@@ -3,6 +3,6 @@
     "navigationBarTextStyle": "white",
     "navigationBarTitleText": "修改打卡信息",
     "usingComponents": {
-        "loading": "../../components/loading/index"
+        "loading": "../../../components/loadingss/index"
     }
   }

@@ -48,8 +48,8 @@
                 </form>
               </view>
               <view class="punch_people" wx:else >
-                <view wx:if="{{ item.punch[0].punchRecordTheDay.length == 0 && item.hasPunchTime  && item.punch[0].dataIndex > 0}}">
-                  <form report-submit="true" bindsubmit="{{onPunch?'onPunch':''}}" data-index="{{ item.punch[0].dataIndex }}" data-id='{{ item.punch[0]._id }}' data-activeId="{{ item._id }}">
+                <view wx:if="{{ item.punch[0].punchRecordTheDay.length == 0 && item.hasPunchTime  && item.punch[0].dataIndex >= 0}}">
+                  <form report-submit="true" bindsubmit="{{onPunch?'onPunch':''}}" data-index="{{ item.punch[0].dataIndex }}" data-id='{{ item.punch[0]._id }}' data-name="{{item.name}}" data-activeId="{{ item._id }}">
                     <button class="operating_punch" formType="submit">点击打卡</button>
                   </form>
                 </view>
@@ -64,7 +64,7 @@
           <accordion-group wux-class="accordion_class">
             <accordion wux-class="accordion_class" onDetail="打开详情" offDetail="关闭详情">
               <view slot="header" class="mine_punch_content_cycle details">
-                <view>已完成1个打卡周期</view>
+                <view>已完成{{ item.punchCycle.length }}个打卡周期</view>
               </view>
               <view class="punch_status_list">
                 <view class='every_day' wx:for="{{ item.dataList }}" wx:key="{{ item }}">
@@ -218,7 +218,7 @@
             <view class="punch_title_text">
               赞！坚持打卡{{ dateIndex+1 }}天
             </view>
-            <view class="adhere_to_punch_text">[ 每天6:30起床 ]</view>
+            <view class="adhere_to_punch_text">[ {{ punchName }} ]</view>
             <button class="share share_one" id="toDay" open-type="share">
               分享我的小坚持
             </button>
@@ -235,7 +235,7 @@
             <view class="punch_title_text">
               大赞！打卡成功啦
             </view>
-            <view class="adhere_to_punch_text">[ 每天6:30起床 ]</view>
+            <view class="adhere_to_punch_text">[ {{ punchName }} ]</view>
             <button class="share share_seven" id="sevenDay" open-type="share">
               分享我的小成功
             </button>

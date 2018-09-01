@@ -25,6 +25,7 @@ Page({
     moreId: "",
     onParticipate:true,
     dateIndex : 0,
+    punchName: ""
   },
 
   /**
@@ -123,12 +124,14 @@ Page({
       if (err) {
         console.error(err);
       } else {
+        console.info(data)
         let currentDate = moment(data.punchInfoJson.currentTime).format("YYYY-MM-DD")
         let currentTime = moment(data.punchInfoJson.currentTime).valueOf()
         console.info("currentTime", currentTime)
         for (let a of data.active) {
           a.punch = data.punch.filter(p => p.active == a._id)
-          console.info(a.punch)
+          a.punchCycle = data.getPunchCycle.filter(g => g.active == a._id)
+          
           if(a.punch.length==0){
             a.punch[0]={
               startTime: a.defaultStartTime,
@@ -140,7 +143,6 @@ Page({
           }else{
             
             // a.hasReserveTime = currentTime >  moment(currentDate+" "+a.punch[0].endTime).valueOf() && currentTime <= moment(currentDate).endOf("day").valueOf()
-            console.info( moment(currentDate + " "+ "22:00").valueOf() )
             a.hasPunchTime = moment(currentDate + " " + "07:00").valueOf() <= currentTime && currentTime <= moment(currentDate + " " + "22:00").valueOf()
             a.hasReserveTime = currentTime > moment(currentDate + " " + "22:00").valueOf() && currentTime <= moment(currentDate).endOf("day").valueOf()
             a.punch[0].dataIndex = Math.floor((currentTime - moment(a.punch[0].startDate).valueOf()) / (24 * 60 * 60 * 1000))
@@ -203,7 +205,8 @@ Page({
     console.info(e)
     let self = this
     self.setData({
-      onPunch: false
+      onPunch: false,
+      punchName:e.currentTarget.dataset.name,
     })
     wx.showLoading({
       title: "加载中",
@@ -214,6 +217,7 @@ Page({
       punch: e.currentTarget.dataset.id,
       formId: e.detail.formId,
     }
+    
     punchInfoUtil.savePunchInfo(data, function (err, punchRecord) {
       if (err) {
         console.error(err)
@@ -241,7 +245,7 @@ Page({
           //判断当天是否是最后一天打卡
           console.info(data.dateIndex)
           if (data.dateIndex == 6) {
-            console.info("gggggggggggggggggg")
+            
             let datajson = {
               activeId :  e.currentTarget.dataset.activeid,
               status: false,

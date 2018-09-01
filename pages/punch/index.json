@@ -1,6 +1,6 @@
 {
   "usingComponents": {
-    "loading": "../../components/loading/index",
+    "loading": "../../components/loadingss/index",
     "accordion": "../../components/accordion/index",
     "accordion-group": "../../components/accordion-group/index"
   },

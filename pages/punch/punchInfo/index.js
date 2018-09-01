@@ -1,7 +1,7 @@
 // pages/punch/punchInfo/index.js
 const moment = require('../../../utils/moment')
 const active = require('../../../utils/api/active')
-
+import { $wuxLoading } from '../../../dist/index'
 const order = require('../../../utils/api/order')
 Page({
 
@@ -10,7 +10,7 @@ Page({
    */
   data: {
     startDate: moment().add(1, "day").format("YYYY-MM-DD"),
-    endDate: moment().add(1, "month").format("YYYY-MM-DD"),
+    endDatevalue: moment().add(1, "month").format("YYYY-MM-DD"),
     startDateValue: moment().add(1, "day").format("YYYY-MM-DD"),
     endDate: moment().add(7, "day").format("YYYY-MM-DD"),
     startTime: "00:00",
@@ -36,22 +36,30 @@ Page({
       title: "加载中...",
       mask: true,
     });
-    self.setData({
+    this.setData({
       punchSwitch: false
     })
     wx.hideLoading();
+    // this.$wuxLoading = $wuxLoading()
+    // this.$wuxLoading.show({
+    //     text: '数据加载中',
+    // })
+
+    // setTimeout(() => {
+    //   self.$wuxLoading.hide()
+    // }, 1500)
+
     if (e.detail.value.title == "") {
       wx.showModal({
         title: "警告",
         content: "打卡主题不能为空",
-        showCancel: true,
-        cancelText: '取消',
-        cancelColor: '#000000',
+        showCancel: false,
         confirmText: '确定',
         confirmColor: '#3CC51F',
       });
       return
     }
+
     // order.createOrder({
     //   body: '7天打卡-确认加入',
     //   totalFee: 700
