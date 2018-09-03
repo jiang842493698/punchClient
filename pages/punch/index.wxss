@@ -77,6 +77,8 @@ page {
     justify-content: space-between;
     align-items: center;
     position: relative;
+    overflow: hidden;
+
 }
 
 .mine_punch_content_info {
@@ -409,6 +411,9 @@ page {
     flex-direction: row;
     justify-content: space-between;
     align-content: center;
+    border-bottom-left-radius:30rpx;
+    border-bottom-right-radius:30rpx;
+    overflow:hidden;
 }
 
 .carry_punch {
@@ -454,14 +459,16 @@ page {
     color: #00cc99;
 }
 .mine_punch_list{
-    margin-left: 50rpx;
+    /* margin-left: 50rpx; */
     width: 100%;
-    height: 750rpx;
+    /* height: 750rpx; */
+    /* margin-bottom: 250rpx; */
     overflow: scroll;
 }
 .accordion_class{
     border-bottom-left-radius: 30rpx;
     border-bottom-right-radius: 30rpx;
+    overflow: hidden;
 }
 .not_add{
      background-color:#bfbfbf;
@@ -480,9 +487,9 @@ page {
     
 }
 
-.mine_punch_list_kongge{
+/* .mine_punch_list_kongge{
     height: 250rpx;
-}
+} */
 .mine_punch_title_kong{
     width: 100rpx;
     height: 50rpx;
@@ -520,4 +527,25 @@ page {
 .more_operating{
     position: fixed;
     bottom:0rpx; 
+}
+
+.accordion-group{
+    
+    border-bottom-left-radius:30rpx;
+    border-bottom-right-radius:30rpx;
+    overflow:hidden;
+}
+.mine_punch_kongge{
+  width: 100%;
+  height: 120rpx;
+}
+.kongge{
+  height: 120rpx;
+  width: 100%;
+}
+.mine_punch_list_array{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }

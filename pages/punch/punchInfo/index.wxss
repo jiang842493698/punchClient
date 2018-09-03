@@ -8,7 +8,7 @@
 }
 
 .punch_text{
-    width: 685rpx;
+    width: 700rpx;
     height: 145rpx;
     border-bottom: 1rpx solid #e1e1e1;
     display: flex;
@@ -36,9 +36,9 @@
     color: #999999;
 }
 .submit_view{
-    width: 100%;
+    width:700rpx;
     position: fixed;
-    bottom: 40rpx;
+    bottom: 20rpx;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -50,6 +50,7 @@
     height: 100rpx;
     line-height: 100rpx;
     color: #999999;
+    /* background-color: red; */
     
 }
 .submit{
@@ -57,4 +58,9 @@
     background-color: #1b76ff;
     height: 100rpx; 
     color: #ffffff;
+    line-height: 100rpx;
+    text-align: center;
+}
+.start{
+  color: #000000
 }

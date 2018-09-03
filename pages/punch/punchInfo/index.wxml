@@ -9,8 +9,8 @@
             <view class="punch_text">
                <picker  mode="date"  name="startDate" bindchange="startDate" value="{{ startDate }}" start="{{ startDate }}" end="{{endDate}}">
                     <view class="start_time">
-                        <view class="start_time_text">开始时间</view>
-                        <view class="start_time_text_content" >{{ startDateValue }}</view>
+                        <view class="start_time_text">开始日期</view>
+                        <view class="start_time_text_content start" >{{ startDateValue }}</view>
                     </view>
                </picker>
             </view>
@@ -19,19 +19,30 @@
         <view class="punch">
             <view class="punch_text">
                 <view class="start_time">
-                    <view class="start_time_text">截止时间（自动7天周期）</view>
+                    <view class="start_time_text">截止日期（自动7天周期）</view>
                     <view class="start_time_text_content" name="endDate">{{ endDate }}</view>
                 </view>
             </view>
         </view>
         <view class="punch">
             <view class="punch_text">
-                <picker  mode="time" name="startTime" bindchange="startTime"  value="{{ startTime }}" start="{{ startTime }}">
+                <picker  mode="time" name="startTime" bindchange="startTime"  value="{{ startTime }}" >
                     <view class="start_time" >
-                        <view class="start_time_text">打卡开始时间段(固定半小时)</view>
-                        <view class="start_time_text_content" name="startTime">{{ startTime }}</view>
+                        <view class="start_time_text">打卡开始时间</view>
+                        <view class="start_time_text_content start" name="startTime">{{ startTime }}</view>
                     </view>
                 </picker>
+            </view>
+        </view>
+
+        <view class="punch">
+            <view class="punch_text">
+                <!-- <picker  mode="time" name="startTime" bindchange="startTime"  value="{{ startTime }}" > -->
+                    <view class="start_time" >
+                        <view class="start_time_text">打卡结束时间(固定半小时)</view>
+                        <view class="start_time_text_content" name="endTime">{{ endTime }}</view>
+                    </view>
+                <!-- </picker> -->
             </view>
         </view>
         

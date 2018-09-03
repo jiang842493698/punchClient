@@ -31,3 +31,9 @@
   font-size: 28rpx;
   color: #888;
 }
+.wux-cell-group{
+  border-bottom-left-radius:30rpx;
+  border-bottom-right-radius:30rpx;
+  overflow:hidden;
+}
+

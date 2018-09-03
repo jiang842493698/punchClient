@@ -36,7 +36,7 @@
     color: #999999;
 }
 .submit_view{
-    width: 100%;
+    width: 685rpx;
     position: fixed;
     bottom: 40rpx;
     display: flex;

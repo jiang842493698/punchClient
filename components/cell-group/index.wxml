@@ -1,4 +1,4 @@
-<view class="wux-class wux-cell-group">
+<view class="wux-class wux-cell-group" style="border-bottom-left-radius:30rpx;border-bottom-right-radius:30rpx;overflow:hidden;">
     <view class="wux-cell-group__hd" wx:if="{{ title }}">{{ title }}</view>
     <view class="wux-cell-group__bd">
         <slot></slot>

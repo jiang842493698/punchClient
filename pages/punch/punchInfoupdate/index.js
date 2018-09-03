@@ -17,7 +17,8 @@ Page({
     endDate: moment().add(1,"month").format("YYYY-MM-DD"),
     startDateValue: moment().add(1,"day").format("YYYY-MM-DD"),
     endDate: moment().add(7,"day").format("YYYY-MM-DD"),
-    startTime: ""
+    startTime: "",
+    endTime: "07:00",
   },
 
   /**
@@ -39,9 +40,17 @@ Page({
       }else{
         console.info(activeData)
         let startTime = activeData.active.defaultStartTime
-        
+        let endTime
+        let currTime = moment().format("YYYY-MM-DD")
+        if (moment(currTime + " " + startTime).valueOf() >= moment(currTime + " " + "23:30").valueOf()){
+          endTime = moment(currTime + " " + startTime).endOf("day").format("HH:mm")
+        }else{
+          endTime = moment(currTime + " " + startTime).add(30, "minute").format("HH:mm")
+        }
+
         self.setData({
           startTime,
+          endTime,
           loadingComplete: true,
           active: activeData.active
         })
@@ -147,10 +156,20 @@ Page({
       endDate
     })
   },
-  startTime(e){
+
+  startTime(e) {
     console.info(e.detail.value)
+    let currTime = moment().format("YYYY-MM-DD")
+    let endTime 
+    if (moment(currTime + " " + e.detail.value).valueOf() > moment(currTime + " " + "23:30").valueOf()){
+      endTime = moment(currTime + " " + e.detail.value).endOf("day").format("HH:mm")
+    }else{
+      endTime = moment(currTime + " " + e.detail.value).add(30, "minute").format("HH:mm")
+    }
+    
     this.setData({
-      startTime: e.detail.value
+      startTime: e.detail.value,
+      endTime
     })
   },
 

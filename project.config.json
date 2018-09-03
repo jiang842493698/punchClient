@@ -43,9 +43,9 @@
 					"query": ""
 				},
 				{
-					"id": -1,
+					"id": 1,
 					"name": "7天打卡-1",
-					"pathName": "pages/punch/index",
+					"pathName": "pages/punch/punchInfo/index",
 					"query": ""
 				}
 			]

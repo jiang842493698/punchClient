@@ -13,10 +13,6 @@
           <view>打卡押金：{{ data.punchInfoJson.cardDeposit - data.punchInfoJson.cardDepositRefund }}元</view>
           <view>打卡返还：{{ data.punchInfoJson.cardDepositRefund }}元</view>
         </view>
-        <!-- <view wx:else>
-                    <view>打卡押金：0元</view>
-                    <view>打卡返还：0元</view>
-                </view> -->
       </view>
     </view>
     <view class="mine_punch_title">
@@ -24,117 +20,82 @@
         我的打卡
       </view>
     </view>
-
-    <view class="mine_punch_list">
-     
-        <view class="mine_punch_content" wx:for="{{ data.active }}" wx:key="{{item._id}}">
-          <view class="more" >
-            <view style="width:70rpx;text-align:center;" bindtap="more" data-id="{{ item._id }}" wx:if="{{ !item.status }}">
-              <image style="width:37rpx;height:10rpx;margin-right:10rpx;" src="/images/more.png"></image>
-            </view>
-            <view style="width:70rpx;height:40rpx;text-align:center;" wx:else>
-               
-            </view>
-          </view>
-          <view class='mine_punch_content_infos'>
-            <view class="mine_punch_content_info">
-              <view class="mine_punch_content_title">{{ item.name }}</view>
-              <view class="mine_punch_content_top">打卡任务：每天{{ item.punch[0].startTime}} — {{item.punch[0].endTime}}内打卡有效</view>
-              <view class="mine_punch_content_date">打卡周期：{{ item.punch[0].startDateFormat }} — {{ item.punch[0].endDateFormat }}</view>
-            </view>
-              <view class="punch_people" wx:if="{{ !item.status }}">
-                <form report-submit="true" bindsubmit="{{onParticipate?'onParticipate':''}}" data-index="{{ item.punch[0].dataIndex }}" data-id='{{ item._id }}'>
-                  <button class="operating_punch" formType="submit">参与打卡</button>
-                </form>
+    <view class='mine_punch_list_array' >
+      <scroll-view class="mine_punch_list" scroll-y style="height:{{ windowHeight }}rpx;">
+          <view class="mine_punch_content" wx:for="{{ data.active }}" wx:key="{{item._id}}">
+            <view class="more" >
+              <view style="width:70rpx;text-align:center;" bindtap="more" data-id="{{ item._id }}" wx:if="{{ !item.status }}">
+                <image style="width:37rpx;height:10rpx;margin-right:10rpx;" src="/images/more.png"></image>
               </view>
-              <view class="punch_people" wx:else >
-                <view wx:if="{{ item.punch[0].punchRecordTheDay.length == 0 && item.hasPunchTime  && item.punch[0].dataIndex >= 0}}">
-                  <form report-submit="true" bindsubmit="{{onPunch?'onPunch':''}}" data-index="{{ item.punch[0].dataIndex }}" data-id='{{ item.punch[0]._id }}' data-name="{{item.name}}" data-activeId="{{ item._id }}">
-                    <button class="operating_punch" formType="submit">点击打卡</button>
+              <view style="width:70rpx;height:40rpx;text-align:center;" wx:else>
+                  
+              </view>
+            </view>
+            <view class='mine_punch_content_infos'>
+              <view class="mine_punch_content_info">
+                <view class="mine_punch_content_title">{{ item.name }}</view>
+                <view class="mine_punch_content_top">打卡任务：每天{{ item.punch[0].startTime}} — {{item.punch[0].endTime}}内打卡有效</view>
+                <view class="mine_punch_content_date">打卡周期：{{ item.punch[0].startDateFormat }} — {{ item.punch[0].endDateFormat }}</view>
+              </view>
+                <view class="punch_people" wx:if="{{ !item.status }}">
+                  <form report-submit="true" bindsubmit="{{onParticipate?'onParticipate':''}}" data-index="{{ item.punch[0].dataIndex }}" data-id='{{ item._id }}'>
+                    <button class="operating_punch" formType="submit">参与打卡</button>
                   </form>
                 </view>
-                <view wx:elif="{{ (item.punch[0].reserveTheDay.length == 0 && item.hasReserveTime) || (item.punch[0].reserveTheDay.length == 0 && item.punch[0].dataIndex < 0 && item.hasReserveTime)}}">
-                  <form report-submit="true" bindsubmit="{{onReserve?'onReserve':''}}" data-id='{{ item.punch[0]._id }}'  data-index="{{ item.punch[0].dataIndex}}">
-                    <button class="operating_punch reserve" formType="submit">预约打卡</button>
-                  </form>
+                <view class="punch_people" wx:else >
+                    <!-- <view>{{ (item.punch[0].reserveTheDay.length == 0 &&  item.punch[0].dataIndex < 0 && item.hasReserveTime) }}</view> -->
+                  <view wx:if="{{ item.punch[0].punchRecordTheDay.length == 0 && item.hasPunchTime  && item.punch[0].dataIndex >= 0}}">
+                    <form report-submit="true" bindsubmit="{{onPunch?'onPunch':''}}" data-index="{{ item.punch[0].dataIndex }}" data-startDate="{{ item.defaultStartDate }}" data-id='{{ item.punch[0]._id }}' data-name="{{item.name}}" data-activeId="{{ item._id }}">
+                      <button class="operating_punch" formType="submit">点击打卡</button>
+                    </form>
+                  </view>
+                  
+                  <view wx:elif="{{ (item.punch[0].reserveTheDay.length == 0 && item.hasReserveTime && item.punch[0].dataIndex >= 0 ) || (item.punch[0].reserveTheDay.length == 0  < 0 && item.hasReserveDateStart.length == 0 )}}">
+                    <form report-submit="true" bindsubmit="{{onReserve?'onReserve':''}}" data-startDate="{{ item.defaultStartDate }}" data-id='{{ item.punch[0]._id }}'  data-index="{{ item.punch[0].dataIndex}}">
+                      <button class="operating_punch reserve" formType="submit">预约打卡</button>
+                    </form>
+                  </view>
+                  <view wx:else class="operating_punch wait">等待打卡</view>
                 </view>
-                <view wx:else class="operating_punch wait">等待打卡</view>
-              </view>
+            </view>
+            <accordion-group class="accordion-group" wux-class="accordion_class">
+              <accordion wux-class="accordion_class" class="accordion-group" onDetail="打开详情" offDetail="关闭详情">
+                <view slot="header" class="mine_punch_content_cycle details">
+                  <view>已完成{{ item.punchCycle.length }}个打卡周期</view>
+                </view>
+                <view class="punch_status_list">
+                  <view class='every_day' wx:for="{{ item.dataList }}" wx:key="{{ item }}">
+                    <view wx:if="{{ item == true }}">
+                      <view>
+                        <view class='punch_status_number'>第{{ index + 1 }}天</view>
+                        <image class='punch_status_number_image' src='/images/daka_ok.png'></image>
+                        <view class='punch_status_status'>已打卡</view>
+                      </view>
+                    </view>
+                    <view wx:else>
+                      <view>
+                        <view class='punch_status_number'>第{{ index + 1 }}天</view>
+                        <image class='punch_status_number_image' src='/images/daka_no.png'></image>
+                        <view class='punch_status_status'>未打卡</view>
+                      </view>
+                    </view>
+                    
+                  </view>
+                  <view class='every_day' wx:for="{{ 7 - item.dataList.length }}" wx:for-item="items" wx:key="{{ item }}">
+                    <view>
+                      <view class='punch_status_number'>第{{ item.dataList.length + index + 1 }}天</view>
+                      <image class='punch_status_number_image' src='/images/daka_stay.png'></image>
+                      <view class='punch_status_status'>未开始</view>
+                    </view>
+                  </view>
+                </view>
+              </accordion>
+            </accordion-group>
           </view>
-          <accordion-group wux-class="accordion_class">
-            <accordion wux-class="accordion_class" onDetail="打开详情" offDetail="关闭详情">
-              <view slot="header" class="mine_punch_content_cycle details">
-                <view>已完成{{ item.punchCycle.length }}个打卡周期</view>
-              </view>
-              <view class="punch_status_list">
-                <view class='every_day' wx:for="{{ item.dataList }}" wx:key="{{ item }}">
-                  <view wx:if="{{ item == true }}">
-                    <view>
-                      <view class='punch_status_number'>第{{ index + 1 }}天</view>
-                      <image class='punch_status_number_image' src='/images/daka_ok.png'></image>
-                      <view class='punch_status_status'>已打卡</view>
-                    </view>
-                  </view>
-                  <view wx:else>
-                    <view>
-                      <view class='punch_status_number'>第{{ index + 1 }}天</view>
-                      <image class='punch_status_number_image' src='/images/daka_no.png'></image>
-                      <view class='punch_status_status'>未打卡</view>
-                    </view>
-                  </view>
-                 
-                </view>
-                <view class='every_day' wx:for="{{ 7 - item.dataList.length }}" wx:for-item="items" wx:key="{{ item }}">
-                  <view>
-                    <view class='punch_status_number'>第{{ item.dataList.length + index + 1 }}天</view>
-                    <image class='punch_status_number_image' src='/images/daka_stay.png'></image>
-                    <view class='punch_status_status'>未开始</view>
-                  </view>
-                </view>
-              </view>
-            </accordion>
-          </accordion-group>
-        </view>
-    
-      <view class="mine_punch_list_kongge">
-
-      </view>
-      <!-- <view class="mine_punch_content">
-                <view class='mine_punch_content_infos'>
-                    <view class="mine_punch_content_info">
-                        <view class="mine_punch_content_title">每天6:30起床</view>
-                        <view class="mine_punch_content_top">打卡任务：每天早上6:30 — 7:00内打卡有效</view>
-                        <view class="mine_punch_content_date">打卡周期：{{ data.punch.startDate }} — {{ data.punch.endDate }}</view>
-                        
-                    </view>
-                    <view class="punch_people">
-                        <form>
-                            <button class="operating_punch">点击打卡</button>
-                        </form>
-                        
-                    </view>
-                </view>
-                <accordion-group wux-class="accordion_class">
-                    <accordion wux-class="accordion_class" onDetail="打开详情" offDetail="关闭详情">
-                        <view slot="header" class="mine_punch_content_cycle details">
-                            <view>已完成1个打卡周期</view>
-                        </view>
-                        <view  class="punch_status_list">
-                            <view class='every_day' wx:for="{{ 7 }}" wx:key="{{ item }}">
-                                <view>
-                                    <view class='punch_status_number'>第{{ index + 1 }}天</view>
-                                    <image class='punch_status_number_image' src='/images/daka_ok.png'></image>
-                                    <view class='punch_status_status'>已打卡</view>
-                                </view>
-                            </view>
-                        </view>
-                    </accordion>
-                </accordion-group>
-            </view> -->
+        <!-- </accordion-group> -->
+      </scroll-view>
     </view>
 
-    
-   
     <view class="insertOperating" >
       <view class="operating" wx:if="{{data.active.length<5}}" bindtap="savePunchInfo">
         开始一个新打卡
@@ -142,7 +103,6 @@
       <view wx:else class="operating not_add">
         已达新建上限
       </view>
-
     </view>
   
   </view>

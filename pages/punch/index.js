@@ -9,7 +9,6 @@ const reserveUtil = require('../../utils/api/reserve');
 const moment = require('../../utils/moment.js')
 
 Page({
-
   /**
    * 页面的初始数据
    */
@@ -25,16 +24,27 @@ Page({
     moreId: "",
     onParticipate:true,
     dateIndex : 0,
-    punchName: ""
+    punchName: "",
+    windowHeight: null
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    var sysInfo = wx.getSystemInfoSync()
     this.loadData();
     this.checkLoginStatus();
     this.timeOut()
+    console.info(sysInfo)
+    let calculatedHeight = function(){
+      let widthRatio = 750 / sysInfo.windowWidth
+      return sysInfo.windowHeight * widthRatio
+    }
+    console.info(calculatedHeight())
+    this.setData({
+      windowHeight: calculatedHeight()-460
+    })
   },
   // onUpdate(){
   //   punchUtil.updateActiveAndPunch(function(err,data){
@@ -93,7 +103,6 @@ Page({
   /**点击更多操作 */
   more(e){
     console.info(e.currentTarget.dataset.id)
-    console.info(e.currentTarget.dataset.status)
     let moreId = e.currentTarget.dataset.id
     let self = this
     // if(e.currentTarget.dataset.status){
@@ -124,10 +133,10 @@ Page({
       if (err) {
         console.error(err);
       } else {
-        console.info(data)
+        // console.info(data)
         let currentDate = moment(data.punchInfoJson.currentTime).format("YYYY-MM-DD")
         let currentTime = moment(data.punchInfoJson.currentTime).valueOf()
-        console.info("currentTime", currentTime)
+        // console.info("currentTime", currentTime)
         for (let a of data.active) {
           a.punch = data.punch.filter(p => p.active == a._id)
           a.punchCycle = data.getPunchCycle.filter(g => g.active == a._id)
@@ -141,33 +150,37 @@ Page({
             }
             
           }else{
-            
-            // a.hasReserveTime = currentTime >  moment(currentDate+" "+a.punch[0].endTime).valueOf() && currentTime <= moment(currentDate).endOf("day").valueOf()
-            a.hasPunchTime = moment(currentDate + " " + "07:00").valueOf() <= currentTime && currentTime <= moment(currentDate + " " + "22:00").valueOf()
-            a.hasReserveTime = currentTime > moment(currentDate + " " + "22:00").valueOf() && currentTime <= moment(currentDate).endOf("day").valueOf()
-            a.punch[0].dataIndex = Math.floor((currentTime - moment(a.punch[0].startDate).valueOf()) / (24 * 60 * 60 * 1000))
+            // console.info(moment(data.punchInfoJson.currentTime).format("YYYY-MM-DD"))
+            a.hasPunchTime = moment(currentDate + " " + a.punch[0].startTime).valueOf() <= currentTime && currentTime <= moment(currentDate + " " + a.punch[0].endTime).valueOf()
+            a.hasReserveTime = currentTime >  moment(currentDate+" "+a.punch[0].endTime).valueOf() && currentTime <= moment(currentDate).endOf("day").valueOf()
+            // a.hasPunchTime = moment(currentDate + " " + "07:00").valueOf() <= currentTime && currentTime <= moment(currentDate + " " + "22:00").valueOf()
+            // a.hasReserveTime = currentTime > moment(currentDate + " " + "22:00").valueOf() && currentTime <= moment(currentDate).endOf("day").valueOf()
 
+            a.punch[0].dataIndex = Math.floor((currentTime - moment(a.punch[0].startDate).valueOf()) / (24 * 60 * 60 * 1000))
+            // console.info("a.punch[0].dataIndex",a.punch[0].dataIndex)
             //判断是否超时
             if(moment(a.punch[0].endDateFormat+" "+a.punch[0].endTime).valueOf() < currentTime && a.status == true){
-              console.info("a.punch[0].endDateFormat",a.punch[0].endDateFormat)
+              // console.info("a.punch[0].endDateFormat",a.punch[0].endDateFormat)
               let datajson = {
                 activeId : a._id,
                 status: false,
                 startDate: moment(currentTime).add(1,"day").toDate()
               }
-              console.info("datajson",moment(currentTime).format("YYYY-MM-DD"))
+              // console.info("datajson",moment(currentTime).format("YYYY-MM-DD"))
               activeUtil.updateActiveByStatus(datajson,function(err,result){
                 if(err){
                   return 
                 }else{
-                  console.info("result",result)
+                  // console.info("result",result)
                   self.onLoad()
                   return
                 }
               })
             }
+           
             a.punch[0].punchRecord = data.punchRecord.filter(pr => pr.punch == a.punch[0]._id)
             a.punch[0].reserve = data.reserve.filter(rs => rs.punch == a.punch[0]._id)
+            a.hasReserveDateStart = a.punch[0].reserve.filter(pr => moment(pr.reserveAt).valueOf() < moment(a.defaultStartDate).valueOf())
             a.punch[0].punchRecordTheDay = data.punchRecordTheDay.filter(pd => pd.punch == a.punch[0]._id)
             a.punch[0].reserveTheDay = data.reserveTheDay.filter(rd => rd.punch == a.punch[0]._id)
             let dataList = [false,false,false,false,false,false,false]
@@ -175,12 +188,14 @@ Page({
               dataList[g.punchDay-1] = true
             }
             a.dataList = dataList.splice(0,a.punch[0].dataIndex+1)
-            console.info(moment(a.punch[0].endDateFormat+" "+a.punch[0].endTime).format("YYYY-MM-DD HH:mm:ss"))
+            // console.info(moment(a.punch[0].endDateFormat+" "+a.punch[0].endTime).format("YYYY-MM-DD HH:mm:ss"))
             
           }
           
         }
-
+        data.active.sort((a,b)=>{
+          return moment(b.createdAt).valueOf() - moment(a.createdAt).valueOf() 
+        })
         
        
         console.info(data)
@@ -216,6 +231,7 @@ Page({
       dateIndex: e.currentTarget.dataset.index,
       punch: e.currentTarget.dataset.id,
       formId: e.detail.formId,
+      startDate: e.currentTarget.dataset.startDate,
     }
     
     punchInfoUtil.savePunchInfo(data, function (err, punchRecord) {
@@ -339,9 +355,10 @@ Page({
       punch: e.currentTarget.dataset.id,
       formId: e.detail.formId,
       // count: self.data.punchCounts,
+      startDate: e.currentTarget.dataset.startDate,
       dateIndex: e.currentTarget.dataset.index,
     }
-    console.info(data)
+    
     reserveUtil.saveReserve(data, function (err, datas) {
       if (err) {
         console.error('error: ', err);
