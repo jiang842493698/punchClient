@@ -10,7 +10,7 @@
                    <picker  mode="date"  name="startDate" bindchange="startDate" value="{{ startDate }}" start="{{ startDateValue }}" end="{{ endDate }}">
                         <view class="start_time">
                             <view class="start_time_text">开始时间</view>
-                            <view class="start_time_text_content" >{{ startDate }}</view>
+                            <view class="start_time_text_content start" >{{ startDate }}</view>
                         </view>
                    </picker>
                 </view>
@@ -29,7 +29,7 @@
                     <picker  mode="time" name="startTime" bindchange="startTime"  value="{{ startTime }}" >
                         <view class="start_time" >
                             <view class="start_time_text">打卡开始时间段(固定半小时)</view>
-                            <view class="start_time_text_content" name="startTime">{{ startTime }}</view>
+                            <view class="start_time_text_content start" name="startTime">{{ startTime }}</view>
                         </view>
                     </picker>
                 </view>

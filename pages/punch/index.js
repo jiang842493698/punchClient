@@ -14,6 +14,7 @@ Page({
    */
   data: {
     serInfo: {},
+    userInfo:{},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
     loadingComplete: false,
@@ -32,16 +33,17 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this.checkLoginStatus();
     var sysInfo = wx.getSystemInfoSync()
     this.loadData();
-    this.checkLoginStatus();
+    
     this.timeOut()
-    console.info(sysInfo)
+    
     let calculatedHeight = function(){
       let widthRatio = 750 / sysInfo.windowWidth
       return sysInfo.windowHeight * widthRatio
     }
-    console.info(calculatedHeight())
+    // console.info(calculatedHeight())
     this.setData({
       windowHeight: calculatedHeight()-460
     })
@@ -136,11 +138,9 @@ Page({
         // console.info(data)
         let currentDate = moment(data.punchInfoJson.currentTime).format("YYYY-MM-DD")
         let currentTime = moment(data.punchInfoJson.currentTime).valueOf()
-        // console.info("currentTime", currentTime)
         for (let a of data.active) {
           a.punch = data.punch.filter(p => p.active == a._id)
           a.punchCycle = data.getPunchCycle.filter(g => g.active == a._id)
-          
           if(a.punch.length==0){
             a.punch[0]={
               startTime: a.defaultStartTime,
@@ -148,7 +148,6 @@ Page({
               startDateFormat: moment(a.defaultStartDate).format("YYYY-MM-DD"),
               endDateFormat: moment(a.defaultStartDate).add(a.dateStatus,"day").format("YYYY-MM-DD"),
             }
-            
           }else{
             // console.info(moment(data.punchInfoJson.currentTime).format("YYYY-MM-DD"))
             a.hasPunchTime = moment(currentDate + " " + a.punch[0].startTime).valueOf() <= currentTime && currentTime <= moment(currentDate + " " + a.punch[0].endTime).valueOf()
@@ -341,6 +340,12 @@ Page({
     })
   },
 
+  /**测试 */
+  // onPunchIsTest(e){
+  //   console.info(e)
+  //   console.info("onPunchIsTest")
+  // },
+
   /**预约打卡 */
   onReserve(e) {
     let self = this
@@ -358,6 +363,7 @@ Page({
       startDate: e.currentTarget.dataset.startDate,
       dateIndex: e.currentTarget.dataset.index,
     }
+
     
     reserveUtil.saveReserve(data, function (err, datas) {
       if (err) {
@@ -378,7 +384,8 @@ Page({
   },
 
   checkLoginStatus() { // 检查登录状态
-    console.info(app.globalData.userInfo)
+    
+    
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
@@ -412,9 +419,7 @@ Page({
         userInfo: e.detail.userInfo,
         hasUserInfo: true
       });
-
       sessionUtil.setUserInfo(e.detail.userInfo);
-      console.info(e.detail.userInfo)
       gamblerUtil.updatePlayer(e.detail.userInfo, function (err, gambler) {
         if (err) {
           console.error('error: ', err);
@@ -444,6 +449,31 @@ Page({
     wx.navigateTo({
       url: "./punchInfo/index",
     });
+  },
+  onShareAppMessage(options) {    // 分享设置
+    console.log(options)
+    if (options.from == 'button') {
+      if (options.target.id == "toDay") {
+        return {
+          title: '今天我又打卡成功了，来看看我在坚持什么吧~',
+          path: `/pages/punch/index`,
+          imageUrl: '/images/share_oneday.png',
+        }
+      } else if (options.target.id == "sevenDay") {
+        return {
+          title: '我已坚持打卡7天，你猜我又养成了什么好习惯？',
+          path: `/pages/punch/index`,
+          imageUrl: '/images/share_sevenday.png',
+        }
+      } else {
+        return {
+          title: '今天我又打卡成功了，来看看我在坚持什么吧~',
+          path: `/pages/punch/index`,
+          imageUrl: '/images/share_oneday.png',
+        }
+      }
+
+    }
   },
 
 })

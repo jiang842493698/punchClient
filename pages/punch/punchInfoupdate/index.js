@@ -76,11 +76,9 @@ Page({
       punchSwitch: false
     })
     
-    if (e.detail.value.title == "") {
+    if (e.detail.value.title.trim() == "") {
       e.detail.value.title = self.data.active.name
     }
-
-
 
     // order.createOrder({
     //   body: '7天打卡-确认加入',

@@ -16,6 +16,7 @@ var Session = {
   },
 
   getUserInfo: function() {
+    console.info(SESSION_USERINFO)
     if (wx.getStorageSync(SESSION_USERINFO)) {
       return JSON.parse(wx.getStorageSync(SESSION_USERINFO));
     } else {

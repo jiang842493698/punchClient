@@ -58,3 +58,6 @@
     height: 100rpx; 
     color: #ffffff;
 }
+.start{
+    color: #000000
+}

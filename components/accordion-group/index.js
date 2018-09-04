@@ -47,8 +47,10 @@ Component({
     },
     methods: {
         updated(activeKey, condition) {
+            console.info("pppppppppp")
+            console.info(activeKey,condition)
             const elements = this.getRelationNodes('../accordion/index')
-
+            console.info(elements)
             if (elements.length > 0) {
                 if (condition) {
                     this.setData({

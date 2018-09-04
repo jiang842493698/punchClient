@@ -1,7 +1,6 @@
 // pages/punch/punchInfo/index.js
 const moment = require('../../../utils/moment')
 const active = require('../../../utils/api/active')
-import { $wuxLoading } from '../../../dist/index'
 const order = require('../../../utils/api/order')
 Page({
 
@@ -49,7 +48,7 @@ Page({
     //   self.$wuxLoading.hide()
     // }, 1500)
 
-    if (e.detail.value.title == "") {
+    if (e.detail.value.title.trim() == "") {
       wx.showModal({
         title: "警告",
         content: "打卡主题不能为空",
@@ -138,7 +137,7 @@ Page({
     console.info(e.detail.value)
     let currTime = moment().format("YYYY-MM-DD")
     let endTime 
-    if (moment(currTime + " " + e.detail.value).valueOf() > moment(currTime + " " + "23:30").valueOf()){
+    if (moment(currTime + " " + e.detail.value).valueOf() >= moment(currTime + " " + "23:30").valueOf()){
       endTime = moment(currTime + " " + e.detail.value).endOf("day").format("HH:mm")
     }else{
       endTime = moment(currTime + " " + e.detail.value).add(30, "minute").format("HH:mm")

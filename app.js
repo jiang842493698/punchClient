@@ -8,6 +8,7 @@ App({
     this.manageUpdate();
   },
   getSession() {
+    
     var userInfo = sessionUtil.getUserInfo();
     if (userInfo) {
       this.globalData.userInfo = userInfo;
